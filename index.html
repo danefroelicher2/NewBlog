@@ -160,13 +160,94 @@
             margin-top: 10px;
         }
 
+        /* Hero Section */
+        .hero-section {
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.1) 0%,
+                    transparent 50%,
+                    rgba(43, 24, 16, 0.05) 100%
+                ),
+                url('textures/parchment.jpg'),
+                var(--parchment-light);
+            background-size: cover;
+            border: 3px solid var(--border-ornate);
+            border-radius: 10px;
+            padding: 60px 40px;
+            margin-bottom: 60px;
+            text-align: center;
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            color: var(--ink-dark);
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            color: var(--ink-medium);
+            font-style: italic;
+            margin-bottom: 25px;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            color: var(--ink-medium);
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .hero-btn {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            color: var(--parchment-light);
+            background: var(--gold-dark);
+            border: 2px solid var(--border-ornate);
+            padding: 15px 40px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .hero-btn:hover {
+            background: var(--gold-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
         /* Navigation */
         nav {
             display: flex;
-            justify-content: center;
-            gap: 20px;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 40px;
             flex-wrap: wrap;
+        }
+
+        .nav-left {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-link {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
         }
 
         nav a, nav button {
@@ -590,6 +671,18 @@
                 right: 10px;
             }
 
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .hero-section {
+                padding: 40px 20px;
+            }
+
             .tales-grid {
                 grid-template-columns: 1fr;
                 gap: 20px;
@@ -616,15 +709,37 @@
         <!-- Header -->
         <header>
             <div class="header-ornament">
-                <h1>The Quest Journal</h1>
-                <p class="subtitle">A Chronicle of Learning and Discovery</p>
+                <h1>Dane's Blog</h1>
+                <p class="subtitle">Software Engineer & Lifelong Learner</p>
             </div>
         </header>
 
         <!-- Navigation -->
         <nav id="mainNav">
-            <a href="#" onclick="app.showAllTales(); return false;">All Tales</a>
+            <div class="nav-left">
+                <a href="#" onclick="app.showHome(); return false;">Home</a>
+                <a href="#" onclick="app.showDiscourse(); return false;">Discourse</a>
+            </div>
+            <div class="nav-right">
+                <a href="https://github.com/danefroelicher2" target="_blank" class="social-link">GitHub</a>
+                <a href="https://linkedin.com/in/yourprofile" target="_blank" class="social-link">LinkedIn</a>
+                <a href="mailto:your@email.com" class="social-link">Email</a>
+            </div>
         </nav>
+
+        <!-- Hero / About Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h2 class="hero-title">About My Journey</h2>
+                <p class="hero-subtitle">Building. Learning. Documenting.</p>
+                <p class="hero-description">
+                    Welcome to my digital journal where I chronicle my adventures in software engineering,
+                    share technical insights, and document lessons learned along the way. This space serves
+                    as both a learning log and a showcase of projects I'm passionate about.
+                </p>
+                <button class="hero-btn" onclick="app.scrollToPosts()">Explore My Tales</button>
+            </div>
+        </section>
 
         <!-- Tales Grid (Blog Posts) -->
         <div id="talesContainer" class="tales-grid">
@@ -1117,6 +1232,21 @@
 
             showAllTales() {
                 this.renderTales();
+            }
+
+            showHome() {
+                this.renderTales();
+            }
+
+            showDiscourse() {
+                // Placeholder for future discourse/blog categories
+                this.showMessage('Discourse section coming soon!', 'success');
+            }
+
+            scrollToPosts() {
+                document.getElementById('talesContainer').scrollIntoView({
+                    behavior: 'smooth'
+                });
             }
 
             // === UTILITIES ===
