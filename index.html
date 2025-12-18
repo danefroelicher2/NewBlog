@@ -19,8 +19,8 @@
 
         :root {
             /* Parchment Color Palette */
-            --parchment-light: #f4e8d0;
-            --parchment-dark: #d4c4a0;
+            --parchment-light: #e8dcc0;
+            --parchment-dark: #c4b090;
             --ink-dark: #2b1810;
             --ink-medium: #5a4a3a;
             --ink-light: #7a6a5a;
@@ -36,7 +36,9 @@
 
         body {
             font-family: var(--font-body);
-            background: linear-gradient(135deg, #e8d5b7 0%, #d4c4a0 100%);
+            background:
+                radial-gradient(circle at center, transparent 0%, rgba(43, 24, 16, 0.3) 100%),
+                linear-gradient(135deg, #d4b896 0%, #b39a76 100%);
             color: var(--ink-dark);
             line-height: 1.7;
             min-height: 100vh;
@@ -52,10 +54,23 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
+            background-image:
                 url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /><feColorMatrix values="0 0 0 0 0, 0 0 0 0 0, 0 0 0 0 0, 0 0 0 0.05 0"/></filter><rect width="300" height="300" filter="url(%23noise)" opacity="0.4"/></svg>');
             pointer-events: none;
             opacity: 0.6;
+            z-index: 1;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at center, transparent 0%, transparent 40%, rgba(43, 24, 16, 0.4) 100%);
+            pointer-events: none;
             z-index: 1;
         }
 
@@ -80,7 +95,11 @@
             max-width: 800px;
             margin: 0 auto 20px;
             padding: 30px;
-            background: var(--parchment-light);
+            background:
+                linear-gradient(180deg,
+                    rgba(255,255,255,0.2) 0%,
+                    var(--parchment-light) 50%,
+                    rgba(43,24,16,0.05) 100%);
             border: 3px solid var(--border-ornate);
             border-radius: 10px;
             box-shadow: 
@@ -164,7 +183,12 @@
 
         /* Tale Card (Blog Post) */
         .tale-card {
-            background: var(--parchment-light);
+            background-image:
+                linear-gradient(180deg,
+                    rgba(255,255,255,0.1) 0%,
+                    transparent 50%,
+                    rgba(43,24,16,0.05) 100%);
+            background-color: var(--parchment-light);
             border: 3px solid var(--border-ornate);
             border-radius: 8px;
             padding: 30px;
