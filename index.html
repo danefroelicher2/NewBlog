@@ -37,12 +37,24 @@
         body {
             font-family: var(--font-body);
             background:
-                radial-gradient(circle at center, transparent 0%, rgba(43, 24, 16, 0.3) 100%),
+                /* Dark edge vignette */
+                radial-gradient(
+                    ellipse at center,
+                    transparent 0%,
+                    transparent 40%,
+                    rgba(43, 24, 16, 0.35) 100%
+                ),
+                /* Parchment texture from free source */
+                url('https://www.transparenttextures.com/patterns/old-map.png'),
+                /* Base parchment color fallback */
                 linear-gradient(135deg, #d4b896 0%, #b39a76 100%);
+
+            background-size: auto, 400px 400px, cover;
+            background-attachment: fixed;
+            background-position: center;
             color: var(--ink-dark);
             line-height: 1.7;
             min-height: 100vh;
-            background-attachment: fixed;
             position: relative;
         }
 
@@ -96,10 +108,15 @@
             margin: 0 auto 20px;
             padding: 30px;
             background:
-                linear-gradient(180deg,
-                    rgba(255,255,255,0.2) 0%,
-                    var(--parchment-light) 50%,
-                    rgba(43,24,16,0.05) 100%);
+                linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.2) 0%,
+                    transparent 50%,
+                    rgba(43, 24, 16, 0.05) 100%
+                ),
+                url('https://www.transparenttextures.com/patterns/old-map.png'),
+                var(--parchment-light);
+            background-size: cover, 300px 300px, cover;
             border: 3px solid var(--border-ornate);
             border-radius: 10px;
             box-shadow: 
@@ -183,12 +200,16 @@
 
         /* Tale Card (Blog Post) */
         .tale-card {
-            background-image:
-                linear-gradient(180deg,
-                    rgba(255,255,255,0.1) 0%,
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.15) 0%,
                     transparent 50%,
-                    rgba(43,24,16,0.05) 100%);
-            background-color: var(--parchment-light);
+                    rgba(43, 24, 16, 0.05) 100%
+                ),
+                url('https://www.transparenttextures.com/patterns/old-map.png'),
+                var(--parchment-light);
+            background-size: cover, 300px 300px, cover;
             border: 3px solid var(--border-ornate);
             border-radius: 8px;
             padding: 30px;
