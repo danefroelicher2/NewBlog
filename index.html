@@ -1146,7 +1146,8 @@
                     title: title,
                     content: content,
                     created: this.currentEditingPost ? this.currentEditingPost.created : new Date().toISOString(),
-                    lastModified: new Date().toISOString()
+                    lastModified: new Date().toISOString(),
+                    isPinned: this.currentEditingPost ? (this.currentEditingPost.isPinned || false) : false
                 };
 
                 if (this.currentEditingPost && this.currentEditingPost.isDraft) {
