@@ -226,6 +226,124 @@
             box-shadow: 0 5px 15px var(--shadow);
         }
 
+        /* Section Title */
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            color: var(--ink-dark);
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 2px;
+            background: var(--gold-accent);
+            margin: 15px auto 0;
+        }
+
+        /* Pinned Posts Section */
+        .pinned-section {
+            margin-bottom: 60px;
+        }
+
+        .pinned-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .pinned-card {
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.15) 0%,
+                    transparent 50%,
+                    rgba(43, 24, 16, 0.05) 100%
+                ),
+                url('textures/parchment.jpg'),
+                var(--parchment-light);
+            background-size: cover;
+            border: 4px solid var(--gold-accent);
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 10px 25px var(--shadow);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .pinned-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px var(--shadow);
+        }
+
+        .pinned-card::before {
+            content: '📌';
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            font-size: 1.5rem;
+            background: var(--parchment-light);
+            padding: 5px 10px;
+            border-radius: 50%;
+        }
+
+        .pinned-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--ink-dark);
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        /* Section Divider */
+        .section-divider {
+            text-align: center;
+            margin: 60px 0;
+            position: relative;
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 2px;
+            background: linear-gradient(
+                to right,
+                transparent,
+                var(--gold-accent),
+                transparent
+            );
+        }
+
+        .section-divider::before {
+            left: 0;
+        }
+
+        .section-divider::after {
+            right: 0;
+        }
+
+        .divider-ornament {
+            font-size: 1.5rem;
+            color: var(--gold-accent);
+            background: var(--parchment-light);
+            padding: 10px 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Recent Posts Section */
+        #recentSection {
+            margin-bottom: 60px;
+        }
+
         /* Navigation */
         nav {
             display: flex;
@@ -683,6 +801,18 @@
                 padding: 40px 20px;
             }
 
+            .pinned-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .pinned-title {
+                font-size: 1.6rem;
+            }
+
             .tales-grid {
                 grid-template-columns: 1fr;
                 gap: 20px;
@@ -741,10 +871,31 @@
             </div>
         </section>
 
-        <!-- Tales Grid (Blog Posts) -->
-        <div id="talesContainer" class="tales-grid">
-            <!-- Posts will be rendered here -->
+        <!-- Pinned Posts Section -->
+        <section id="pinnedSection" class="pinned-section" style="display: none;">
+            <h2 class="section-title">Featured Chronicles</h2>
+            <div id="pinnedContainer" class="pinned-grid">
+                <!-- Pinned posts render here -->
+            </div>
+        </section>
+
+        <!-- Section Divider -->
+        <div class="section-divider">
+            <span class="divider-ornament">⚔ ⚜ ⚔</span>
         </div>
+
+        <!-- Recent Posts Section -->
+        <section id="recentSection">
+            <h2 class="section-title">Recent Tales</h2>
+            <div id="talesContainer" class="tales-grid">
+                <!-- Posts will be rendered here -->
+            </div>
+            <div id="loadMoreContainer" style="text-align: center; margin: 40px 0; display: none;">
+                <button class="hero-btn" onclick="app.loadMorePosts()">
+                    Load More Tales ↓
+                </button>
+            </div>
+        </section>
 
         <!-- Empty State -->
         <div id="emptyState" class="empty-state" style="display: none;">
@@ -851,7 +1002,9 @@
                 this.githubToken = null;
                 this.currentEditingPost = null;
                 this.currentViewingPost = null;
-                
+                this.postsPerPage = 6;
+                this.currentPage = 1;
+
                 // GitHub Configuration
                 this.githubRepo = 'danefroelicher2/NewBlog';
                 this.githubBranch = 'main';
@@ -1177,6 +1330,20 @@
                 this.showMessage('Tale deleted', 'success');
             }
 
+            async togglePin() {
+                if (!this.currentViewingPost) return;
+
+                const post = this.posts.find(p => p.id === this.currentViewingPost.id);
+                if (post) {
+                    post.isPinned = !post.isPinned;
+                    await this.savePostsToGitHub();
+                    this.currentPage = 1; // Reset pagination
+                    this.renderTales();
+                    this.closeModal('viewModal');
+                    this.showMessage(post.isPinned ? 'Post pinned!' : 'Post unpinned!', 'success');
+                }
+            }
+
             viewTale(postId) {
                 const post = this.posts.find(p => p.id === postId);
                 if (!post) return;
@@ -1188,8 +1355,18 @@
                     ${post.lastModified !== post.created ? `<span>Updated: ${this.formatDate(post.lastModified)}</span>` : ''}
                 `;
                 document.getElementById('viewContent').textContent = post.content;
-                
+
                 if (this.isAdmin) {
+                    const pinText = this.currentViewingPost.isPinned ? 'Unpin' : 'Pin to Top';
+                    document.getElementById('viewAdminActions').innerHTML = `
+                        <div class="button-group">
+                            <button class="btn btn-secondary" onclick="app.togglePin()">
+                                ${pinText}
+                            </button>
+                            <button class="btn btn-secondary" onclick="app.editTale()">Edit</button>
+                            <button class="btn admin-btn danger" onclick="app.deleteTale()">Delete</button>
+                        </div>
+                    `;
                     document.getElementById('viewAdminActions').style.display = 'block';
                 } else {
                     document.getElementById('viewAdminActions').style.display = 'none';
@@ -1201,19 +1378,63 @@
             // === RENDERING ===
 
             renderTales() {
+                // Render pinned posts
+                this.renderPinnedPosts();
+
+                // Render recent posts with pagination
+                this.renderRecentPosts();
+            }
+
+            renderPinnedPosts() {
+                const pinnedPosts = this.posts.filter(p => p.isPinned);
+                const pinnedContainer = document.getElementById('pinnedContainer');
+                const pinnedSection = document.getElementById('pinnedSection');
+
+                if (pinnedPosts.length === 0) {
+                    pinnedSection.style.display = 'none';
+                    return;
+                }
+
+                pinnedSection.style.display = 'block';
+                pinnedContainer.innerHTML = pinnedPosts.map(post => {
+                    const preview = post.content.substring(0, 150) + (post.content.length > 150 ? '...' : '');
+                    return `
+                        <div class="pinned-card tale-card">
+                            <h3 class="pinned-title tale-title">${this.escapeHtml(post.title)}</h3>
+                            <div class="tale-meta">
+                                <span>${this.formatDate(post.created)}</span>
+                            </div>
+                            <div class="tale-content">${this.escapeHtml(preview)}</div>
+                            <button class="read-tale-btn" onclick="app.viewTale(${post.id})">
+                                Read the Tale
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            renderRecentPosts() {
                 const container = document.getElementById('talesContainer');
                 const emptyState = document.getElementById('emptyState');
+                const loadMoreContainer = document.getElementById('loadMoreContainer');
 
-                if (this.posts.length === 0) {
+                // Get unpinned posts
+                const unpinnedPosts = this.posts.filter(p => !p.isPinned);
+
+                if (unpinnedPosts.length === 0) {
                     container.style.display = 'none';
                     emptyState.style.display = 'block';
+                    loadMoreContainer.style.display = 'none';
                     return;
                 }
 
                 container.style.display = 'grid';
                 emptyState.style.display = 'none';
 
-                container.innerHTML = this.posts.map(post => {
+                // Paginate posts
+                const displayPosts = unpinnedPosts.slice(0, this.currentPage * this.postsPerPage);
+
+                container.innerHTML = displayPosts.map(post => {
                     const preview = post.content.substring(0, 200) + (post.content.length > 200 ? '...' : '');
                     return `
                         <div class="tale-card">
@@ -1228,6 +1449,19 @@
                         </div>
                     `;
                 }).join('');
+
+                // Show/hide load more button
+                if (displayPosts.length < unpinnedPosts.length) {
+                    loadMoreContainer.style.display = 'block';
+                } else {
+                    loadMoreContainer.style.display = 'none';
+                }
+            }
+
+            loadMorePosts() {
+                this.currentPage++;
+                this.renderRecentPosts();
+                document.getElementById('recentSection').scrollIntoView({ behavior: 'smooth' });
             }
 
             showAllTales() {
