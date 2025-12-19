@@ -159,80 +159,6 @@
             color: var(--gold-accent);
         }
 
-        .subtitle {
-            font-family: var(--font-heading);
-            font-size: 1rem;
-            color: var(--ink-medium);
-            font-style: italic;
-            margin: 10px 0 0 0;
-        }
-
-        /* Hero Section */
-        .hero-section {
-            background:
-                linear-gradient(
-                    180deg,
-                    rgba(255, 255, 255, 0.1) 0%,
-                    transparent 50%,
-                    rgba(43, 24, 16, 0.05) 100%
-                ),
-                url('textures/parchment.jpg'),
-                var(--parchment-light);
-            background-size: cover;
-            border: 3px solid var(--border-ornate);
-            border-radius: 10px;
-            padding: 60px 40px;
-            margin-bottom: 60px;
-            text-align: center;
-            box-shadow: 0 10px 30px var(--shadow);
-        }
-
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .hero-title {
-            font-family: var(--font-heading);
-            font-size: 3rem;
-            color: var(--ink-dark);
-            margin-bottom: 15px;
-            line-height: 1.2;
-        }
-
-        .hero-subtitle {
-            font-family: var(--font-heading);
-            font-size: 1.5rem;
-            color: var(--ink-medium);
-            font-style: italic;
-            margin-bottom: 25px;
-        }
-
-        .hero-description {
-            font-size: 1.1rem;
-            color: var(--ink-medium);
-            line-height: 1.8;
-            margin-bottom: 30px;
-        }
-
-        .hero-btn {
-            font-family: var(--font-heading);
-            font-size: 1.1rem;
-            color: var(--parchment-light);
-            background: var(--gold-dark);
-            border: 2px solid var(--border-ornate);
-            padding: 15px 40px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .hero-btn:hover {
-            background: var(--gold-accent);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px var(--shadow);
-        }
-
         /* Section Title */
         .section-title {
             font-family: var(--font-heading);
@@ -733,18 +659,6 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1.2rem;
-            }
-
-            .hero-section {
-                padding: 40px 20px;
-            }
-
             .pinned-grid {
                 grid-template-columns: 1fr;
             }
@@ -814,22 +728,7 @@
                 <!-- Right side - empty for now -->
                 <div class="nav-right"></div>
             </div>
-            <p class="subtitle">Software Engineer & Lifelong Learner</p>
         </header>
-
-        <!-- Hero / About Section -->
-        <section class="hero-section">
-            <div class="hero-content">
-                <h2 class="hero-title">About My Journey</h2>
-                <p class="hero-subtitle">Building. Learning. Documenting.</p>
-                <p class="hero-description">
-                    Welcome to my digital journal where I chronicle my adventures in software engineering,
-                    share technical insights, and document lessons learned along the way. This space serves
-                    as both a learning log and a showcase of projects I'm passionate about.
-                </p>
-                <button class="hero-btn" onclick="app.scrollToPosts()">Explore My Tales</button>
-            </div>
-        </section>
 
         <!-- Pinned Posts Section -->
         <section id="pinnedSection" class="pinned-section" style="display: none;">
@@ -1435,12 +1334,6 @@
             showDiscourse() {
                 // Placeholder for future discourse/blog categories
                 this.showMessage('Discourse section coming soon!', 'success');
-            }
-
-            scrollToPosts() {
-                document.getElementById('talesContainer').scrollIntoView({
-                    behavior: 'smooth'
-                });
             }
 
             // === UTILITIES ===
