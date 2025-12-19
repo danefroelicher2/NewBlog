@@ -974,40 +974,60 @@
             }
 
             async savePostsToGitHub() {
+                console.log('🔄 Attempting to save posts to GitHub...');
+                console.log('📊 Posts to save:', this.posts.length);
+                console.log('🔑 Token present:', !!this.githubToken);
+
                 if (!this.githubToken) {
                     localStorage.setItem('questJournalPosts', JSON.stringify(this.posts));
-                    this.showMessage('Saved locally (no GitHub token)', 'success');
+                    this.showMessage('⚠️ Saved locally only (no GitHub token)', 'error');
+                    console.warn('No GitHub token - saved to localStorage only');
                     return;
                 }
 
                 try {
                     const url = `https://api.github.com/repos/${this.githubRepo}/contents/${this.postsFile}`;
+                    console.log('📡 GitHub API URL:', url);
+
                     let sha = null;
-                    
+
+                    // Get current file SHA
                     try {
+                        console.log('🔍 Fetching current file SHA...');
                         const getResponse = await fetch(url, {
                             headers: {
                                 'Authorization': `token ${this.githubToken}`,
                                 'Accept': 'application/vnd.github.v3+json'
                             }
                         });
+
+                        console.log('📥 GET response status:', getResponse.status);
+
                         if (getResponse.ok) {
                             const getData = await getResponse.json();
                             sha = getData.sha;
+                            console.log('✅ Found existing file, SHA:', sha);
+                        } else {
+                            console.log('ℹ️ File does not exist yet, will create new');
                         }
                     } catch (e) {
-                        console.log('File does not exist yet, will create');
+                        console.log('ℹ️ File lookup failed (probably new file):', e.message);
                     }
 
+                    // Prepare content
                     const content = btoa(JSON.stringify(this.posts, null, 2));
                     const payload = {
-                        message: `Update tales - ${new Date().toISOString()}`,
+                        message: `Update blog posts - ${new Date().toISOString()}`,
                         content: content,
                         branch: this.githubBranch
                     };
-                    
+
                     if (sha) payload.sha = sha;
 
+                    console.log('📤 Sending update to GitHub...');
+                    console.log('📦 Payload:', { ...payload, content: '[base64 content]' });
+
+                    // Save to GitHub
                     const response = await fetch(url, {
                         method: 'PUT',
                         headers: {
@@ -1018,16 +1038,28 @@
                         body: JSON.stringify(payload)
                     });
 
+                    console.log('📥 PUT response status:', response.status);
+
                     if (!response.ok) {
-                        throw new Error('GitHub API error');
+                        const errorData = await response.json();
+                        console.error('❌ GitHub API error:', errorData);
+                        throw new Error(`GitHub API error: ${errorData.message || response.statusText}`);
                     }
 
+                    const result = await response.json();
+                    console.log('✅ GitHub save successful!', result);
+
+                    // Also save to localStorage as backup
                     localStorage.setItem('questJournalPosts', JSON.stringify(this.posts));
-                    this.showMessage('Saved to GitHub successfully!', 'success');
+                    this.showMessage('✅ Saved to GitHub successfully!', 'success');
+
                 } catch (error) {
-                    console.error('Error saving to GitHub:', error);
+                    console.error('❌ Error saving to GitHub:', error);
+                    console.error('Error details:', error.message);
+
+                    // Fallback to localStorage
                     localStorage.setItem('questJournalPosts', JSON.stringify(this.posts));
-                    this.showMessage('Saved locally (GitHub sync failed)', 'error');
+                    this.showMessage(`⚠️ GitHub sync failed: ${error.message}. Saved locally.`, 'error');
                 }
             }
 
