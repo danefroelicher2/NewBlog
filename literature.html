@@ -174,16 +174,148 @@
             display: none;
         }
 
-        .content-area {
-            text-align: center;
-            padding: 100px 20px;
-        }
-
-        .coming-soon {
+        .section-title {
             font-family: var(--font-heading);
             font-size: 2.5rem;
             color: var(--ink-dark);
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 2px;
+            background: var(--gold-accent);
+            margin: 15px auto 0;
+        }
+
+        .tales-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .tale-card {
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(43,24,16,0.05) 100%),
+                url('textures/parchment.jpg'),
+                var(--parchment-light);
+            background-size: cover;
+            border: 3px solid var(--border-ornate);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 8px 20px var(--shadow);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .tale-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px var(--shadow);
+        }
+
+        .tale-card::before {
+            content: '✦';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            color: var(--gold-accent);
+            background: var(--parchment-light);
+            padding: 0 15px;
+        }
+
+        .tale-title {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--ink-dark);
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .tale-meta {
+            font-size: 0.9rem;
+            color: var(--ink-light);
             font-style: italic;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tale-content {
+            font-size: 1.05rem;
+            color: var(--ink-medium);
+            line-height: 1.8;
+            margin-bottom: 20px;
+            max-height: 150px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tale-content::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: linear-gradient(transparent, var(--parchment-light));
+        }
+
+        .read-tale-btn {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            color: var(--parchment-light);
+            background: var(--gold-dark);
+            border: 2px solid var(--border-ornate);
+            padding: 10px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
+        }
+
+        .read-tale-btn:hover {
+            background: var(--gold-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .load-more-btn {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            color: var(--parchment-light);
+            background: var(--gold-dark);
+            border: 2px solid var(--border-ornate);
+            padding: 15px 40px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .load-more-btn:hover {
+            background: var(--gold-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        @media (max-width: 1024px) {
+            .tales-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .tales-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         footer {
@@ -212,13 +344,114 @@
             <a href="literature.html" class="sub-link">Literature</a>
         </nav>
 
-        <div class="content-area">
-            <p class="coming-soon">Literature - Coming Soon...</p>
-        </div>
+        <section id="recentSection">
+            <h2 class="section-title">Literature Chronicles</h2>
+            <div id="talesContainer" class="tales-grid"></div>
+            <div id="loadMoreContainer" style="text-align: center; margin: 40px 0; display: none;">
+                <button class="load-more-btn" onclick="loadMorePosts()">
+                    See More ↓
+                </button>
+            </div>
+        </section>
 
         <footer>
             <p>© 2025 Dane's Blog. All rights reserved.</p>
         </footer>
     </div>
+
+    <script>
+        let allPosts = [];
+        let currentPage = 1;
+        const postsPerPage = 9; // 3x3 grid
+
+        async function loadPostsFromGitHub() {
+            try {
+                const url = 'https://api.github.com/repos/danefroelicher2/NewBlog/contents/data/posts.json';
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    console.log('No posts found');
+                    allPosts = [];
+                    return;
+                }
+
+                const data = await response.json();
+                const content = atob(data.content);
+                allPosts = JSON.parse(content);
+                console.log(`Loaded ${allPosts.length} posts from GitHub`);
+
+            } catch (error) {
+                console.error('Error loading posts:', error);
+                allPosts = [];
+            }
+        }
+
+        function renderPosts() {
+            const container = document.getElementById('talesContainer');
+            const loadMoreContainer = document.getElementById('loadMoreContainer');
+
+            // Filter by literature category
+            const filteredPosts = allPosts.filter(p => !p.isPinned && p.category === 'literature');
+
+            if (filteredPosts.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--ink-medium); font-style: italic; padding: 60px;">No literature tales yet...</p>';
+                loadMoreContainer.style.display = 'none';
+                return;
+            }
+
+            // Show posts up to current page
+            const displayPosts = filteredPosts.slice(0, currentPage * postsPerPage);
+
+            container.innerHTML = displayPosts.map(post => {
+                const preview = post.content.substring(0, 150) + (post.content.length > 150 ? '...' : '');
+                return `
+                    <div class="tale-card">
+                        <h3 class="tale-title">${escapeHtml(post.title)}</h3>
+                        <div class="tale-meta">
+                            <span>${formatDate(post.created)}</span>
+                        </div>
+                        <div class="tale-content">${escapeHtml(preview)}</div>
+                        <button class="read-tale-btn" onclick="window.location.href='index.html#view-${post.id}'">
+                            Read the Tale
+                        </button>
+                    </div>
+                `;
+            }).join('');
+
+            // Show/hide load more button
+            if (displayPosts.length < filteredPosts.length) {
+                loadMoreContainer.style.display = 'block';
+            } else {
+                loadMoreContainer.style.display = 'none';
+            }
+        }
+
+        function loadMorePosts() {
+            currentPage++;
+            renderPosts();
+            document.getElementById('recentSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function formatDate(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize on page load
+        (async function() {
+            await loadPostsFromGitHub();
+            renderPosts();
+        })();
+    </script>
 </body>
 </html>
