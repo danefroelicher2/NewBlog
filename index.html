@@ -725,7 +725,7 @@
         <h3 class="admin-title">🖋️ Scribe's Desk</h3>
         <button class="admin-btn" onclick="app.createNewTale()">Pen a New Tale</button>
         <button class="admin-btn" onclick="app.viewDrafts()">View Drafts</button>
-        <button class="admin-btn danger" onclick="app.logout()">Close Desk</button>
+        <button class="admin-btn danger" onclick="app.logout()">Logout</button>
     </div>
 
     <!-- Login Modal -->
@@ -885,8 +885,13 @@
                 this.githubToken = null;
                 sessionStorage.removeItem('questJournalAdmin');
                 document.getElementById('adminPanel').classList.remove('active');
-                this.showMessage('Logged out', 'success');
+                this.showMessage('Logged out - refresh to hide panel', 'success');
                 this.renderTales();
+
+                // Reload page to completely clear admin state
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             }
 
             showAdminPanel() {
