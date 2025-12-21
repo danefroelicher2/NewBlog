@@ -733,20 +733,15 @@
         <div class="modal-content">
             <button class="close-modal" onclick="app.closeModal('loginModal')">&times;</button>
             <h2 class="modal-header">Scribe's Authentication</h2>
-            
+
             <div class="form-group">
-                <label>Password</label>
-                <input type="password" id="adminPassword" placeholder="Enter your password">
-            </div>
-            
-            <div class="form-group">
-                <label>GitHub Token (for cross-device sync)</label>
-                <input type="password" id="githubToken" placeholder="Optional: Paste your GitHub token">
-                <small style="color: var(--ink-light); font-style: italic; display: block; margin-top: 5px;">
-                    Without token, tales save locally only. With token, tales sync across all devices.
+                <label>GitHub Personal Access Token</label>
+                <input type="password" id="githubToken" placeholder="Paste your GitHub token here">
+                <small style="color: var(--ink-light); font-style: italic; display: block; margin-top: 8px;">
+                    Your token enables cross-device post synchronization via GitHub API.
                 </small>
             </div>
-            
+
             <div class="button-group">
                 <button class="btn btn-primary" onclick="app.login()">Enter</button>
                 <button class="btn btn-secondary" onclick="app.closeModal('loginModal')">Cancel</button>
@@ -829,10 +824,7 @@
                 this.githubRepo = 'danefroelicher2/NewBlog';
                 this.githubBranch = 'main';
                 this.postsFile = 'data/posts.json';
-                
-                // Admin password
-                this.adminPasswordHash = this.hashPassword('Pacers33!!!');
-                
+
                 this.init();
             }
 
@@ -844,16 +836,6 @@
             }
 
             // === AUTHENTICATION ===
-            
-            hashPassword(password) {
-                let hash = 0;
-                for (let i = 0; i < password.length; i++) {
-                    const char = password.charCodeAt(i);
-                    hash = ((hash << 5) - hash) + char;
-                    hash = hash & hash;
-                }
-                return hash.toString();
-            }
 
             checkExistingSession() {
                 const session = sessionStorage.getItem('questJournalAdmin');
@@ -870,17 +852,22 @@
             }
 
             login() {
-                const password = document.getElementById('adminPassword').value;
-                const token = document.getElementById('githubToken').value;
+                const token = document.getElementById('githubToken').value.trim();
 
-                if (this.hashPassword(password) !== this.adminPasswordHash) {
-                    this.showMessage('Invalid password', 'error');
+                if (!token) {
+                    this.showMessage('GitHub token required', 'error');
+                    return;
+                }
+
+                // Validate token format (should start with github_pat_ or ghp_)
+                if (!token.startsWith('github_pat_') && !token.startsWith('ghp_')) {
+                    this.showMessage('Invalid token format. Token should start with github_pat_ or ghp_', 'error');
                     return;
                 }
 
                 this.isAdmin = true;
-                this.githubToken = token || null;
-                
+                this.githubToken = token;
+
                 sessionStorage.setItem('questJournalAdmin', JSON.stringify({
                     isAdmin: true,
                     token: this.githubToken
@@ -888,9 +875,8 @@
 
                 this.showAdminPanel();
                 this.closeModal('loginModal');
-                this.showMessage(token ? 'Authenticated with GitHub sync' : 'Authenticated (local mode)', 'success');
-                
-                document.getElementById('adminPassword').value = '';
+                this.showMessage('Authenticated with GitHub!', 'success');
+
                 document.getElementById('githubToken').value = '';
             }
 
