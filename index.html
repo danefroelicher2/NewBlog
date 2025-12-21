@@ -1444,6 +1444,15 @@
 
         // Initialize app
         const app = new QuestJournal();
+
+        // Immediate admin indicator check on page load
+        (function() {
+            const session = sessionStorage.getItem('questJournalAdmin');
+            if (session) {
+                document.getElementById('adminIndicator').classList.add('active');
+                console.log('✅ Admin indicator shown on page load');
+            }
+        })();
     </script>
 </body>
 </html>
