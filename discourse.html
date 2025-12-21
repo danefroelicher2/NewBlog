@@ -133,32 +133,56 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 30px;
-            max-width: 800px;
-            margin: 0 auto 40px;
-            padding: 20px 30px;
-            background: var(--parchment-light);
-            border: 2px solid var(--border-ornate);
-            border-radius: 8px;
-            box-shadow: 0 3px 10px var(--shadow);
+            gap: 25px;
+            max-width: 900px;
+            margin: 0 auto 50px;
+            flex-wrap: wrap;
         }
 
         .sub-link {
             font-family: var(--font-heading);
-            font-size: 1.1rem;
-            color: var(--ink-medium);
+            font-size: 1.2rem;
+            color: var(--ink-dark);
             text-decoration: none;
-            padding: 8px 15px;
+            padding: 20px 35px;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(43,24,16,0.05) 100%),
+                url('textures/parchment.jpg'),
+                var(--parchment-light);
+            background-size: cover;
+            border: 3px solid var(--border-ornate);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px var(--shadow);
             transition: all 0.3s ease;
+            position: relative;
+            letter-spacing: 1px;
+        }
+
+        .sub-link::before {
+            content: '✦';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.3rem;
+            color: var(--gold-accent);
+            background: var(--parchment-light);
+            padding: 0 10px;
         }
 
         .sub-link:hover {
-            color: var(--gold-accent);
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 50%, rgba(43,24,16,0.08) 100%),
+                url('textures/parchment.jpg'),
+                var(--gold-accent);
+            background-size: cover;
+            color: var(--parchment-light);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px var(--shadow);
         }
 
         .sub-separator {
-            color: var(--ink-light);
-            font-size: 1rem;
+            display: none;
         }
 
         .content-area {
