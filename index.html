@@ -1445,10 +1445,20 @@
         // Initialize app
         const app = new QuestJournal();
 
-        // Immediate admin check on page load
+        // Immediate admin check on page load - restore token to app instance
         (function() {
             const session = sessionStorage.getItem('questJournalAdmin');
             if (session) {
+                const data = JSON.parse(session);
+
+                // Restore token to the app instance
+                if (app && data.token) {
+                    app.isAdmin = true;
+                    app.githubToken = data.token;
+                    console.log('✅ Token restored:', !!app.githubToken);
+                }
+
+                // Show UI elements
                 document.getElementById('adminIndicator').classList.add('active');
                 document.getElementById('adminPanel').classList.add('active');
                 console.log('✅ Admin mode and Scribe\'s Desk shown on page load');
