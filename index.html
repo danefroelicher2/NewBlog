@@ -511,6 +511,24 @@
             box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.2);
         }
 
+        select {
+            width: 100%;
+            padding: 12px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            background: var(--parchment-dark);
+            border: 2px solid var(--border-ornate);
+            border-radius: 5px;
+            color: var(--ink-dark);
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.2);
+        }
+
         .button-group {
             display: flex;
             gap: 15px;
@@ -764,7 +782,17 @@
                 <label>Title</label>
                 <input type="text" id="postTitle" placeholder="Enter tale title...">
             </div>
-            
+
+            <div class="form-group">
+                <label>Category (Optional)</label>
+                <select id="postCategory">
+                    <option value="">None - General</option>
+                    <option value="tech">Tech</option>
+                    <option value="history">History</option>
+                    <option value="literature">Literature</option>
+                </select>
+            </div>
+
             <div class="form-group">
                 <label>Content</label>
                 <textarea id="postContent" placeholder="Chronicle your adventure..."></textarea>
@@ -1028,6 +1056,7 @@
             saveDraft() {
                 const title = document.getElementById('postTitle').value.trim();
                 const content = document.getElementById('postContent').value.trim();
+                const category = document.getElementById('postCategory').value;
 
                 if (!title && !content) {
                     this.showMessage('Nothing to save', 'error');
@@ -1035,12 +1064,13 @@
                 }
 
                 const draftTitle = title || 'Untitled Draft';
-                
+
                 if (this.currentEditingPost && this.currentEditingPost.isDraft) {
                     const draft = this.drafts.find(d => d.id === this.currentEditingPost.id);
                     if (draft) {
                         draft.title = draftTitle;
                         draft.content = content;
+                        draft.category = category || null;
                         draft.lastModified = new Date().toISOString();
                     }
                 } else {
@@ -1048,6 +1078,7 @@
                         id: Date.now(),
                         title: draftTitle,
                         content: content,
+                        category: category || null,
                         created: new Date().toISOString(),
                         lastModified: new Date().toISOString(),
                         isDraft: true
@@ -1091,7 +1122,8 @@
                 document.getElementById('editorTitle').textContent = 'Edit Draft';
                 document.getElementById('postTitle').value = draft.title;
                 document.getElementById('postContent').value = draft.content;
-                
+                document.getElementById('postCategory').value = draft.category || '';
+
                 this.closeModal('draftsModal');
                 document.getElementById('editorModal').classList.add('active');
             }
@@ -1112,6 +1144,7 @@
                 document.getElementById('editorTitle').textContent = 'Pen a New Tale';
                 document.getElementById('postTitle').value = '';
                 document.getElementById('postContent').value = '';
+                document.getElementById('postCategory').value = '';
                 document.getElementById('editorModal').classList.add('active');
             }
 
@@ -1124,10 +1157,13 @@
                     return;
                 }
 
+                const category = document.getElementById('postCategory').value;
+
                 const post = {
                     id: this.currentEditingPost ? this.currentEditingPost.id : Date.now(),
                     title: title,
                     content: content,
+                    category: category || null,
                     created: this.currentEditingPost ? this.currentEditingPost.created : new Date().toISOString(),
                     lastModified: new Date().toISOString(),
                     isPinned: this.currentEditingPost ? (this.currentEditingPost.isPinned || false) : false
@@ -1157,7 +1193,8 @@
                 document.getElementById('editorTitle').textContent = 'Edit Tale';
                 document.getElementById('postTitle').value = this.currentViewingPost.title;
                 document.getElementById('postContent').value = this.currentViewingPost.content;
-                
+                document.getElementById('postCategory').value = this.currentViewingPost.category || '';
+
                 this.closeModal('viewModal');
                 document.getElementById('editorModal').classList.add('active');
             }
