@@ -844,6 +844,7 @@
                     this.isAdmin = true;
                     this.githubToken = data.token || null;
                     this.showAdminPanel();
+                    console.log('✅ Admin session restored');
                 }
             }
 
@@ -896,6 +897,7 @@
 
             showAdminPanel() {
                 document.getElementById('adminPanel').classList.add('active');
+                console.log('✅ Admin panel shown');
             }
 
             // === GITHUB API ===
