@@ -96,19 +96,19 @@
 
         /* Header */
         header {
-            text-align: center;
-            padding: 30px 20px 40px;
+            padding: 30px 20px;
             position: relative;
             margin-bottom: 40px;
         }
 
-        .header-bar {
+        .main-nav {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+            gap: 20px;
             max-width: 1200px;
-            margin: 0 auto 15px;
-            padding: 20px 30px;
+            margin: 0 auto;
+            padding: 25px 40px;
             background: var(--parchment-light);
             border: 3px solid var(--border-ornate);
             border-radius: 10px;
@@ -117,46 +117,24 @@
                 inset 0 1px 0 rgba(255,255,255,0.3);
         }
 
-        .header-title {
+        .nav-link {
             font-family: var(--font-heading);
-            font-size: 2.5rem;
+            font-size: 1.3rem;
             color: var(--ink-dark);
-            margin: 0;
-            text-shadow: 2px 2px 0px var(--parchment-dark);
-            letter-spacing: 2px;
-            flex: 1;
-            text-align: center;
+            text-decoration: none;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
         }
 
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 200px;
+        .nav-link:hover {
+            color: var(--gold-accent);
+            transform: translateY(-2px);
         }
 
         .nav-separator {
             color: var(--ink-light);
-            font-size: 1.2rem;
-        }
-
-        .nav-right {
-            min-width: 200px;
-        }
-
-        .nav-left a,
-        .nav-right a {
-            font-family: var(--font-heading);
-            font-size: 1rem;
-            color: var(--ink-dark);
-            text-decoration: none;
-            padding: 8px 15px;
-            transition: all 0.3s ease;
-        }
-
-        .nav-left a:hover,
-        .nav-right a:hover {
-            color: var(--gold-accent);
+            font-size: 1.5rem;
         }
 
         /* Section Title */
@@ -690,44 +668,17 @@
                 max-width: none;
             }
         }
-
-        @media (max-width: 968px) {
-            .header-bar {
-                flex-direction: column;
-                gap: 20px;
-                padding: 20px;
-            }
-
-            .header-title {
-                font-size: 2rem;
-                order: -1;
-            }
-
-            .nav-left,
-            .nav-right {
-                min-width: auto;
-            }
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- Header -->
         <header>
-            <div class="header-bar">
-                <!-- Left Nav -->
-                <nav class="nav-left">
-                    <a href="#" onclick="app.showHome(); return false;">Home</a>
-                    <span class="nav-separator">·</span>
-                    <a href="#" onclick="app.showDiscourse(); return false;">Discourse</a>
-                </nav>
-
-                <!-- Center Title -->
-                <h1 class="header-title">Dane's Blog</h1>
-
-                <!-- Right side - empty for now -->
-                <div class="nav-right"></div>
-            </div>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <span class="nav-separator">·</span>
+                <a href="discourse.html" class="nav-link">Discourse</a>
+            </nav>
         </header>
 
         <!-- Pinned Posts Section -->

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discourse - Dane's Blog</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --parchment-light: #e8dcc0;
+            --parchment-dark: #c4b090;
+            --ink-dark: #2b1810;
+            --ink-medium: #5a4a3a;
+            --ink-light: #7a6a5a;
+            --gold-accent: #c9a961;
+            --gold-dark: #8b6f47;
+            --border-ornate: #8b6f47;
+            --shadow: rgba(43, 24, 16, 0.3);
+            --font-heading: 'IM Fell English', serif;
+            --font-body: 'Crimson Text', serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background:
+                radial-gradient(
+                    ellipse at center,
+                    transparent 0%,
+                    transparent 40%,
+                    rgba(43, 24, 16, 0.35) 100%
+                ),
+                url('textures/parchment.jpg'),
+                linear-gradient(135deg, #d4b896 0%, #b39a76 100%);
+            background-size: cover, cover, cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: var(--ink-dark);
+            line-height: 1.7;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /><feColorMatrix values="0 0 0 0 0, 0 0 0 0 0, 0 0 0 0 0, 0 0 0 0.05 0"/></filter><rect width="300" height="300" filter="url(%23noise)" opacity="0.4"/></svg>');
+            pointer-events: none;
+            opacity: 0.6;
+            z-index: 1;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at center, transparent 0%, transparent 40%, rgba(43, 24, 16, 0.4) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            padding: 30px 20px;
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 25px 40px;
+            background: var(--parchment-light);
+            border: 3px solid var(--border-ornate);
+            border-radius: 10px;
+            box-shadow:
+                0 5px 15px var(--shadow),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+
+        .nav-link {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            color: var(--ink-dark);
+            text-decoration: none;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        .nav-link:hover {
+            color: var(--gold-accent);
+            transform: translateY(-2px);
+        }
+
+        .nav-separator {
+            color: var(--ink-light);
+            font-size: 1.5rem;
+        }
+
+        .content-area {
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .coming-soon {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            color: var(--ink-dark);
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--ink-medium);
+            font-style: italic;
+        }
+
+        .admin-link {
+            color: transparent;
+            user-select: none;
+            cursor: default;
+            font-size: 0.7rem;
+        }
+
+        .admin-link:hover {
+            color: var(--ink-light);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <span class="nav-separator">·</span>
+                <a href="discourse.html" class="nav-link">Discourse</a>
+            </nav>
+        </header>
+
+        <!-- Content -->
+        <div class="content-area">
+            <p class="coming-soon">Coming Soon...</p>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>© 2025 Dane's Blog. All rights reserved.</p>
+            <p class="admin-link" onclick="window.location.href='index.html#admin'">⚔</p>
+        </footer>
+    </div>
+</body>
+</html>
