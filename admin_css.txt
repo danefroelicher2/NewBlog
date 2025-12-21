@@ -1,0 +1,248 @@
+        /* Admin Panel */
+        #adminPanel {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--parchment-light);
+            border: 3px solid var(--gold-dark);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 30px var(--shadow);
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        #adminPanel.active {
+            display: block;
+        }
+
+        .admin-title {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            color: var(--ink-dark);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .admin-btn {
+            font-family: var(--font-heading);
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            background: var(--gold-dark);
+            color: var(--parchment-light);
+            border: 2px solid var(--border-ornate);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .admin-btn:hover {
+            background: var(--gold-accent);
+            transform: translateY(-2px);
+        }
+
+        .admin-btn.danger {
+            background: #8b4049;
+            border-color: #6d3239;
+        }
+
+        .admin-btn.danger:hover {
+            background: #a85058;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(43, 24, 16, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--parchment-light);
+            border: 4px solid var(--border-ornate);
+            border-radius: 10px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .modal-header {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--ink-dark);
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 2px solid var(--border-ornate);
+            padding-bottom: 15px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            color: var(--ink-medium);
+            cursor: pointer;
+            border: none;
+            background: none;
+            line-height: 1;
+        }
+
+        .close-modal:hover {
+            color: var(--ink-dark);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            color: var(--ink-dark);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            background: var(--parchment-dark);
+            border: 2px solid var(--border-ornate);
+            border-radius: 5px;
+            color: var(--ink-dark);
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        textarea {
+            min-height: 300px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            font-family: var(--font-heading);
+            flex: 1;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 2px solid var(--border-ornate);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--gold-dark);
+            color: var(--parchment-light);
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-accent);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--parchment-dark);
+            color: var(--ink-dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--ink-light);
+            color: var(--parchment-light);
+        }
+
+        .status-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: var(--parchment-light);
+            border: 2px solid var(--border-ornate);
+            border-radius: 8px;
+            box-shadow: 0 5px 20px var(--shadow);
+            z-index: 3000;
+            font-family: var(--font-heading);
+            animation: slideIn 0.3s ease;
+            max-width: 400px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .status-message.success {
+            border-color: #6b8b47;
+            background: #e8f0d0;
+        }
+
+        .status-message.error {
+            border-color: #8b4049;
+            background: #f0d0d4;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--ink-medium);
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .button-group {
+                flex-direction: column;
+            }
+
+            #adminPanel {
+                left: 20px;
+                right: 20px;
+                max-width: none;
+            }
+        }

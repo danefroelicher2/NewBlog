@@ -1,0 +1,291 @@
+    <!-- Admin Panel (Scribe's Desk) -->
+    <div id="adminPanel">
+        <h3 class="admin-title">🖋️ Scribe's Desk</h3>
+        <button class="admin-btn" onclick="createNewTale()">Pen a New Tale</button>
+        <button class="admin-btn" onclick="viewDrafts()">View Drafts</button>
+        <button class="admin-btn danger" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Post Editor Modal -->
+    <div id="editorModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('editorModal')">&times;</button>
+            <h2 class="modal-header" id="editorTitle">Pen a New Tale</h2>
+
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="postTitle" placeholder="Enter tale title...">
+            </div>
+
+            <div class="form-group">
+                <label>Category (Optional)</label>
+                <select id="postCategory">
+                    <option value="">None - General</option>
+                    <option value="tech">Tech</option>
+                    <option value="history">History</option>
+                    <option value="literature">Literature</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Content</label>
+                <textarea id="postContent" placeholder="Chronicle your adventure..."></textarea>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="publishTale()">Publish Tale</button>
+                <button class="btn btn-secondary" onclick="saveDraft()">Save Draft</button>
+                <button class="btn btn-secondary" onclick="closeModal('editorModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drafts Modal -->
+    <div id="draftsModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('draftsModal')">&times;</button>
+            <h2 class="modal-header">Saved Drafts</h2>
+            <div id="draftsContainer"></div>
+        </div>
+    </div>
+
+    <script>
+    // Admin functionality
+    let githubToken = null;
+    let currentEditingDraft = null;
+    let drafts = [];
+
+    function checkAdminSession() {
+        const session = sessionStorage.getItem('questJournalAdmin');
+        if (session) {
+            const data = JSON.parse(session);
+            githubToken = data.token;
+            document.getElementById('adminPanel').classList.add('active');
+        }
+    }
+
+    function createNewTale() {
+        currentEditingDraft = null;
+        document.getElementById('editorTitle').textContent = 'Pen a New Tale';
+        document.getElementById('postTitle').value = '';
+        document.getElementById('postCategory').value = '';
+        document.getElementById('postContent').value = '';
+        document.getElementById('editorModal').classList.add('active');
+    }
+
+    async function publishTale() {
+        const title = document.getElementById('postTitle').value.trim();
+        const content = document.getElementById('postContent').value.trim();
+        const category = document.getElementById('postCategory').value;
+
+        if (!title || !content) {
+            showMessage('Title and content are required', 'error');
+            return;
+        }
+
+        const post = {
+            id: currentEditingDraft ? currentEditingDraft.id : Date.now(),
+            title: title,
+            content: content,
+            category: category || null,
+            created: currentEditingDraft ? currentEditingDraft.created : new Date().toISOString(),
+            lastModified: new Date().toISOString(),
+            isPinned: false
+        };
+
+        // Remove from drafts if editing a draft
+        if (currentEditingDraft && currentEditingDraft.isDraft) {
+            drafts = drafts.filter(d => d.id !== currentEditingDraft.id);
+            saveDraftsToLocal();
+        }
+
+        // Add to allPosts array
+        const existingIndex = allPosts.findIndex(p => p.id === post.id);
+        if (existingIndex >= 0) {
+            allPosts[existingIndex] = post;
+        } else {
+            allPosts.unshift(post);
+        }
+
+        await savePostsToGitHub();
+        renderPosts();
+        closeModal('editorModal');
+    }
+
+    function saveDraft() {
+        const title = document.getElementById('postTitle').value.trim();
+        const content = document.getElementById('postContent').value.trim();
+        const category = document.getElementById('postCategory').value;
+
+        if (!title && !content) {
+            showMessage('Nothing to save', 'error');
+            return;
+        }
+
+        const draftTitle = title || 'Untitled Draft';
+
+        if (currentEditingDraft && currentEditingDraft.isDraft) {
+            const draft = drafts.find(d => d.id === currentEditingDraft.id);
+            if (draft) {
+                draft.title = draftTitle;
+                draft.content = content;
+                draft.category = category || null;
+                draft.lastModified = new Date().toISOString();
+            }
+        } else {
+            const draft = {
+                id: Date.now(),
+                title: draftTitle,
+                content: content,
+                category: category || null,
+                created: new Date().toISOString(),
+                lastModified: new Date().toISOString(),
+                isDraft: true
+            };
+            drafts.unshift(draft);
+        }
+
+        saveDraftsToLocal();
+        showMessage('Draft saved', 'success');
+        closeModal('editorModal');
+    }
+
+    function viewDrafts() {
+        loadDraftsFromLocal();
+        const container = document.getElementById('draftsContainer');
+
+        if (drafts.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: var(--ink-medium); font-style: italic; padding: 40px;">No drafts yet</p>';
+        } else {
+            container.innerHTML = drafts.map(draft => `
+                <div class="tale-card" style="margin-bottom: 20px;">
+                    <h3 class="tale-title">${escapeHtml(draft.title)}</h3>
+                    <div class="tale-meta">
+                        <span>Last modified: ${formatDate(draft.lastModified)}</span>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-secondary" onclick="editDraft(${draft.id})">Edit</button>
+                        <button class="btn admin-btn danger" onclick="deleteDraft(${draft.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('draftsModal').classList.add('active');
+    }
+
+    function editDraft(draftId) {
+        const draft = drafts.find(d => d.id === draftId);
+        if (!draft) return;
+
+        currentEditingDraft = draft;
+        document.getElementById('editorTitle').textContent = 'Edit Draft';
+        document.getElementById('postTitle').value = draft.title;
+        document.getElementById('postCategory').value = draft.category || '';
+        document.getElementById('postContent').value = draft.content;
+
+        closeModal('draftsModal');
+        document.getElementById('editorModal').classList.add('active');
+    }
+
+    function deleteDraft(draftId) {
+        if (!confirm('Delete this draft?')) return;
+
+        drafts = drafts.filter(d => d.id !== draftId);
+        saveDraftsToLocal();
+        viewDrafts();
+        showMessage('Draft deleted', 'success');
+    }
+
+    async function savePostsToGitHub() {
+        if (!githubToken) {
+            showMessage('Saved locally (not logged in)', 'error');
+            return;
+        }
+
+        try {
+            const url = 'https://api.github.com/repos/danefroelicher2/NewBlog/contents/data/posts.json';
+            let sha = null;
+
+            try {
+                const getResponse = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                if (getResponse.ok) {
+                    const getData = await getResponse.json();
+                    sha = getData.sha;
+                }
+            } catch (e) {
+                console.log('File does not exist yet');
+            }
+
+            const content = btoa(JSON.stringify(allPosts, null, 2));
+            const payload = {
+                message: `Update blog posts - ${new Date().toISOString()}`,
+                content: content,
+                branch: 'main'
+            };
+
+            if (sha) payload.sha = sha;
+
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${githubToken}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error('GitHub API error');
+            }
+
+            showMessage('Saved to GitHub successfully!', 'success');
+
+            // Reload posts after save
+            await loadPostsFromGitHub();
+            renderPosts();
+
+        } catch (error) {
+            console.error('Error saving to GitHub:', error);
+            showMessage('GitHub sync failed', 'error');
+        }
+    }
+
+    function loadDraftsFromLocal() {
+        const stored = localStorage.getItem('questJournalDrafts');
+        drafts = stored ? JSON.parse(stored) : [];
+    }
+
+    function saveDraftsToLocal() {
+        localStorage.setItem('questJournalDrafts', JSON.stringify(drafts));
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('active');
+    }
+
+    function logout() {
+        sessionStorage.removeItem('questJournalAdmin');
+        window.location.reload();
+    }
+
+    function showMessage(message, type = 'success') {
+        const msg = document.createElement('div');
+        msg.className = `status-message ${type}`;
+        msg.textContent = message;
+        document.body.appendChild(msg);
+
+        setTimeout(() => {
+            msg.remove();
+        }, 3000);
+    }
+
+    // Initialize admin on page load
+    checkAdminSession();
+    </script>

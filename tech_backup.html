@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discourse - Dane's Blog</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --parchment-light: #e8dcc0;
+            --parchment-dark: #c4b090;
+            --ink-dark: #2b1810;
+            --ink-medium: #5a4a3a;
+            --ink-light: #7a6a5a;
+            --gold-accent: #c9a961;
+            --gold-dark: #8b6f47;
+            --border-ornate: #8b6f47;
+            --shadow: rgba(43, 24, 16, 0.3);
+            --font-heading: 'IM Fell English', serif;
+            --font-body: 'Crimson Text', serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background:
+                radial-gradient(
+                    ellipse at center,
+                    transparent 0%,
+                    transparent 40%,
+                    rgba(43, 24, 16, 0.35) 100%
+                ),
+                url('textures/parchment.jpg'),
+                linear-gradient(135deg, #d4b896 0%, #b39a76 100%);
+            background-size: cover, cover, cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: var(--ink-dark);
+            line-height: 1.7;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /><feColorMatrix values="0 0 0 0 0, 0 0 0 0 0, 0 0 0 0 0, 0 0 0 0.05 0"/></filter><rect width="300" height="300" filter="url(%23noise)" opacity="0.4"/></svg>');
+            pointer-events: none;
+            opacity: 0.6;
+            z-index: 1;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at center, transparent 0%, transparent 40%, rgba(43, 24, 16, 0.4) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            padding: 30px 20px;
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 25px 40px;
+            background: var(--parchment-light);
+            border: 3px solid var(--border-ornate);
+            border-radius: 10px;
+            box-shadow:
+                0 5px 15px var(--shadow),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+
+        .nav-link {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            color: var(--ink-dark);
+            text-decoration: none;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        .nav-link:hover {
+            color: var(--gold-accent);
+            transform: translateY(-2px);
+        }
+
+        .nav-separator {
+            color: var(--ink-light);
+            font-size: 1.5rem;
+        }
+
+        /* Subheader Navigation */
+        .sub-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            max-width: 900px;
+            margin: 0 auto 50px;
+            flex-wrap: wrap;
+        }
+
+        .sub-link {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            color: var(--ink-dark);
+            text-decoration: none;
+            padding: 20px 35px;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(43,24,16,0.05) 100%),
+                url('textures/parchment.jpg'),
+                var(--parchment-light);
+            background-size: cover;
+            border: 3px solid var(--border-ornate);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            letter-spacing: 1px;
+        }
+
+        .sub-link::before {
+            content: '✦';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.3rem;
+            color: var(--gold-accent);
+            background: var(--parchment-light);
+            padding: 0 10px;
+        }
+
+        .sub-link:hover {
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 50%, rgba(43,24,16,0.08) 100%),
+                url('textures/parchment.jpg'),
+                var(--gold-accent);
+            background-size: cover;
+            color: var(--parchment-light);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px var(--shadow);
+        }
+
+        .sub-separator {
+            display: none;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            color: var(--ink-dark);
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 2px;
+            background: var(--gold-accent);
+            margin: 15px auto 0;
+        }
+
+        .tales-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .tale-card {
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(43,24,16,0.05) 100%),
+                url('textures/parchment.jpg'),
+                var(--parchment-light);
+            background-size: cover;
+            border: 3px solid var(--border-ornate);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 8px 20px var(--shadow);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .tale-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px var(--shadow);
+        }
+
+        .tale-card::before {
+            content: '✦';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            color: var(--gold-accent);
+            background: var(--parchment-light);
+            padding: 0 15px;
+        }
+
+        .tale-title {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--ink-dark);
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .tale-meta {
+            font-size: 0.9rem;
+            color: var(--ink-light);
+            font-style: italic;
+            margin-bottom: 15px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tale-content {
+            font-size: 1.05rem;
+            color: var(--ink-medium);
+            line-height: 1.8;
+            margin-bottom: 20px;
+            max-height: 150px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tale-content::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: linear-gradient(transparent, var(--parchment-light));
+        }
+
+        .read-tale-btn {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            color: var(--parchment-light);
+            background: var(--gold-dark);
+            border: 2px solid var(--border-ornate);
+            padding: 10px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            text-align: center;
+        }
+
+        .read-tale-btn:hover {
+            background: var(--gold-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .load-more-btn {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            color: var(--parchment-light);
+            background: var(--gold-dark);
+            border: 2px solid var(--border-ornate);
+            padding: 15px 40px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .load-more-btn:hover {
+            background: var(--gold-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        @media (max-width: 1024px) {
+            .tales-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .tales-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .tales-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Admin Panel */
+        #adminPanel {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--parchment-light);
+            border: 3px solid var(--gold-dark);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 30px var(--shadow);
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        #adminPanel.active {
+            display: block;
+        }
+
+        .admin-title {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            color: var(--ink-dark);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .admin-btn {
+            font-family: var(--font-heading);
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            background: var(--gold-dark);
+            color: var(--parchment-light);
+            border: 2px solid var(--border-ornate);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .admin-btn:hover {
+            background: var(--gold-accent);
+            transform: translateY(-2px);
+        }
+
+        .admin-btn.danger {
+            background: #8b4049;
+            border-color: #6d3239;
+        }
+
+        .admin-btn.danger:hover {
+            background: #a85058;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(43, 24, 16, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--parchment-light);
+            border: 4px solid var(--border-ornate);
+            border-radius: 10px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .modal-header {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--ink-dark);
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 2px solid var(--border-ornate);
+            padding-bottom: 15px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            color: var(--ink-medium);
+            cursor: pointer;
+            border: none;
+            background: none;
+            line-height: 1;
+        }
+
+        .close-modal:hover {
+            color: var(--ink-dark);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            color: var(--ink-dark);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            background: var(--parchment-dark);
+            border: 2px solid var(--border-ornate);
+            border-radius: 5px;
+            color: var(--ink-dark);
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        textarea {
+            min-height: 300px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            font-family: var(--font-heading);
+            flex: 1;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 2px solid var(--border-ornate);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--gold-dark);
+            color: var(--parchment-light);
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-accent);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--parchment-dark);
+            color: var(--ink-dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--ink-light);
+            color: var(--parchment-light);
+        }
+
+        .status-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: var(--parchment-light);
+            border: 2px solid var(--border-ornate);
+            border-radius: 8px;
+            box-shadow: 0 5px 20px var(--shadow);
+            z-index: 3000;
+            font-family: var(--font-heading);
+            animation: slideIn 0.3s ease;
+            max-width: 400px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .status-message.success {
+            border-color: #6b8b47;
+            background: #e8f0d0;
+        }
+
+        .status-message.error {
+            border-color: #8b4049;
+            background: #f0d0d4;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--ink-medium);
+            font-style: italic;
+        }
+
+        .admin-link {
+            color: transparent;
+            user-select: none;
+            cursor: default;
+            font-size: 0.7rem;
+        }
+
+        .admin-link:hover {
+            color: var(--ink-light);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .button-group {
+                flex-direction: column;
+            }
+
+            #adminPanel {
+                left: 20px;
+                right: 20px;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <span class="nav-separator">·</span>
+                <a href="discourse.html" class="nav-link">Discourse</a>
+            </nav>
+        </header>
+
+        <!-- Subheader Navigation -->
+        <nav class="sub-nav">
+            <a href="tech.html" class="sub-link">Tech</a>
+            <span class="sub-separator">|</span>
+            <a href="history.html" class="sub-link">History</a>
+            <span class="sub-separator">|</span>
+            <a href="literature.html" class="sub-link">Literature</a>
+        </nav>
+
+        <!-- Recent Tales Section -->
+        <section id="recentSection">
+            <h2 class="section-title">Recent Tales</h2>
+            <div id="talesContainer" class="tales-grid"></div>
+            <div id="loadMoreContainer" style="text-align: center; margin: 40px 0; display: none;">
+                <button class="load-more-btn" onclick="loadMorePosts()">
+                    See More ↓
+                </button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>© 2025 Dane's Blog. All rights reserved.</p>
+            <p class="admin-link" onclick="window.location.href='index.html#admin'">⚔</p>
+        </footer>
+    </div>
+
+    <script>
+        let allPosts = [];
+        let currentPage = 1;
+        const postsPerPage = 9; // 3x3 grid
+
+        async function loadPostsFromGitHub() {
+            try {
+                const url = 'https://api.github.com/repos/danefroelicher2/NewBlog/contents/data/posts.json';
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    console.log('No posts found');
+                    allPosts = [];
+                    return;
+                }
+
+                const data = await response.json();
+                const content = atob(data.content);
+                allPosts = JSON.parse(content);
+                console.log(`Loaded ${allPosts.length} posts from GitHub`);
+
+            } catch (error) {
+                console.error('Error loading posts:', error);
+                allPosts = [];
+            }
+        }
+
+        function renderPosts() {
+            const container = document.getElementById('talesContainer');
+            const loadMoreContainer = document.getElementById('loadMoreContainer');
+
+            // Get all posts (no category filter for discourse main page)
+            const filteredPosts = allPosts.filter(p => !p.isPinned);
+
+            if (filteredPosts.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--ink-medium); font-style: italic; padding: 60px;">No tales yet...</p>';
+                loadMoreContainer.style.display = 'none';
+                return;
+            }
+
+            // Show posts up to current page
+            const displayPosts = filteredPosts.slice(0, currentPage * postsPerPage);
+
+            container.innerHTML = displayPosts.map(post => {
+                const preview = post.content.substring(0, 150) + (post.content.length > 150 ? '...' : '');
+                return `
+                    <div class="tale-card">
+                        <h3 class="tale-title">${escapeHtml(post.title)}</h3>
+                        <div class="tale-meta">
+                            <span>${formatDate(post.created)}</span>
+                            ${post.category ? `<span>Category: ${capitalize(post.category)}</span>` : ''}
+                        </div>
+                        <div class="tale-content">${escapeHtml(preview)}</div>
+                        <button class="read-tale-btn" onclick="window.location.href='index.html#view-${post.id}'">
+                            Read the Tale
+                        </button>
+                    </div>
+                `;
+            }).join('');
+
+            // Show/hide load more button
+            if (displayPosts.length < filteredPosts.length) {
+                loadMoreContainer.style.display = 'block';
+            } else {
+                loadMoreContainer.style.display = 'none';
+            }
+        }
+
+        function loadMorePosts() {
+            currentPage++;
+            renderPosts();
+            document.getElementById('recentSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function formatDate(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // Initialize on page load
+        (async function() {
+            await loadPostsFromGitHub();
+            renderPosts();
+        })();
+    </script>
+
+    <!-- Admin Panel (Scribe's Desk) -->
+    <div id="adminPanel">
+        <h3 class="admin-title">🖋️ Scribe's Desk</h3>
+        <button class="admin-btn" onclick="createNewTale()">Pen a New Tale</button>
+        <button class="admin-btn" onclick="viewDrafts()">View Drafts</button>
+        <button class="admin-btn danger" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- Post Editor Modal -->
+    <div id="editorModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('editorModal')">&times;</button>
+            <h2 class="modal-header" id="editorTitle">Pen a New Tale</h2>
+
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="postTitle" placeholder="Enter tale title...">
+            </div>
+
+            <div class="form-group">
+                <label>Category (Optional)</label>
+                <select id="postCategory">
+                    <option value="">None - General</option>
+                    <option value="tech">Tech</option>
+                    <option value="history">History</option>
+                    <option value="literature">Literature</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Content</label>
+                <textarea id="postContent" placeholder="Chronicle your adventure..."></textarea>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="publishTale()">Publish Tale</button>
+                <button class="btn btn-secondary" onclick="saveDraft()">Save Draft</button>
+                <button class="btn btn-secondary" onclick="closeModal('editorModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drafts Modal -->
+    <div id="draftsModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('draftsModal')">&times;</button>
+            <h2 class="modal-header">Saved Drafts</h2>
+            <div id="draftsContainer"></div>
+        </div>
+    </div>
+
+    <script>
+    // Admin functionality
+    let githubToken = null;
+    let currentEditingDraft = null;
+    let drafts = [];
+
+    function checkAdminSession() {
+        const session = sessionStorage.getItem('questJournalAdmin');
+        if (session) {
+            const data = JSON.parse(session);
+            githubToken = data.token;
+            document.getElementById('adminPanel').classList.add('active');
+        }
+    }
+
+    function createNewTale() {
+        currentEditingDraft = null;
+        document.getElementById('editorTitle').textContent = 'Pen a New Tale';
+        document.getElementById('postTitle').value = '';
+        document.getElementById('postCategory').value = '';
+        document.getElementById('postContent').value = '';
+        document.getElementById('editorModal').classList.add('active');
+    }
+
+    async function publishTale() {
+        const title = document.getElementById('postTitle').value.trim();
+        const content = document.getElementById('postContent').value.trim();
+        const category = document.getElementById('postCategory').value;
+
+        if (!title || !content) {
+            showMessage('Title and content are required', 'error');
+            return;
+        }
+
+        const post = {
+            id: currentEditingDraft ? currentEditingDraft.id : Date.now(),
+            title: title,
+            content: content,
+            category: category || null,
+            created: currentEditingDraft ? currentEditingDraft.created : new Date().toISOString(),
+            lastModified: new Date().toISOString(),
+            isPinned: false
+        };
+
+        // Remove from drafts if editing a draft
+        if (currentEditingDraft && currentEditingDraft.isDraft) {
+            drafts = drafts.filter(d => d.id !== currentEditingDraft.id);
+            saveDraftsToLocal();
+        }
+
+        // Add to allPosts array
+        const existingIndex = allPosts.findIndex(p => p.id === post.id);
+        if (existingIndex >= 0) {
+            allPosts[existingIndex] = post;
+        } else {
+            allPosts.unshift(post);
+        }
+
+        await savePostsToGitHub();
+        renderPosts();
+        closeModal('editorModal');
+    }
+
+    function saveDraft() {
+        const title = document.getElementById('postTitle').value.trim();
+        const content = document.getElementById('postContent').value.trim();
+        const category = document.getElementById('postCategory').value;
+
+        if (!title && !content) {
+            showMessage('Nothing to save', 'error');
+            return;
+        }
+
+        const draftTitle = title || 'Untitled Draft';
+
+        if (currentEditingDraft && currentEditingDraft.isDraft) {
+            const draft = drafts.find(d => d.id === currentEditingDraft.id);
+            if (draft) {
+                draft.title = draftTitle;
+                draft.content = content;
+                draft.category = category || null;
+                draft.lastModified = new Date().toISOString();
+            }
+        } else {
+            const draft = {
+                id: Date.now(),
+                title: draftTitle,
+                content: content,
+                category: category || null,
+                created: new Date().toISOString(),
+                lastModified: new Date().toISOString(),
+                isDraft: true
+            };
+            drafts.unshift(draft);
+        }
+
+        saveDraftsToLocal();
+        showMessage('Draft saved', 'success');
+        closeModal('editorModal');
+    }
+
+    function viewDrafts() {
+        loadDraftsFromLocal();
+        const container = document.getElementById('draftsContainer');
+
+        if (drafts.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: var(--ink-medium); font-style: italic; padding: 40px;">No drafts yet</p>';
+        } else {
+            container.innerHTML = drafts.map(draft => `
+                <div class="tale-card" style="margin-bottom: 20px;">
+                    <h3 class="tale-title">${escapeHtml(draft.title)}</h3>
+                    <div class="tale-meta">
+                        <span>Last modified: ${formatDate(draft.lastModified)}</span>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-secondary" onclick="editDraft(${draft.id})">Edit</button>
+                        <button class="btn admin-btn danger" onclick="deleteDraft(${draft.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('draftsModal').classList.add('active');
+    }
+
+    function editDraft(draftId) {
+        const draft = drafts.find(d => d.id === draftId);
+        if (!draft) return;
+
+        currentEditingDraft = draft;
+        document.getElementById('editorTitle').textContent = 'Edit Draft';
+        document.getElementById('postTitle').value = draft.title;
+        document.getElementById('postCategory').value = draft.category || '';
+        document.getElementById('postContent').value = draft.content;
+
+        closeModal('draftsModal');
+        document.getElementById('editorModal').classList.add('active');
+    }
+
+    function deleteDraft(draftId) {
+        if (!confirm('Delete this draft?')) return;
+
+        drafts = drafts.filter(d => d.id !== draftId);
+        saveDraftsToLocal();
+        viewDrafts();
+        showMessage('Draft deleted', 'success');
+    }
+
+    async function savePostsToGitHub() {
+        if (!githubToken) {
+            showMessage('Saved locally (not logged in)', 'error');
+            return;
+        }
+
+        try {
+            const url = 'https://api.github.com/repos/danefroelicher2/NewBlog/contents/data/posts.json';
+            let sha = null;
+
+            try {
+                const getResponse = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                if (getResponse.ok) {
+                    const getData = await getResponse.json();
+                    sha = getData.sha;
+                }
+            } catch (e) {
+                console.log('File does not exist yet');
+            }
+
+            const content = btoa(JSON.stringify(allPosts, null, 2));
+            const payload = {
+                message: `Update blog posts - ${new Date().toISOString()}`,
+                content: content,
+                branch: 'main'
+            };
+
+            if (sha) payload.sha = sha;
+
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${githubToken}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error('GitHub API error');
+            }
+
+            showMessage('Saved to GitHub successfully!', 'success');
+
+            // Reload posts after save
+            await loadPostsFromGitHub();
+            renderPosts();
+
+        } catch (error) {
+            console.error('Error saving to GitHub:', error);
+            showMessage('GitHub sync failed', 'error');
+        }
+    }
+
+    function loadDraftsFromLocal() {
+        const stored = localStorage.getItem('questJournalDrafts');
+        drafts = stored ? JSON.parse(stored) : [];
+    }
+
+    function saveDraftsToLocal() {
+        localStorage.setItem('questJournalDrafts', JSON.stringify(drafts));
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('active');
+    }
+
+    function logout() {
+        sessionStorage.removeItem('questJournalAdmin');
+        window.location.reload();
+    }
+
+    function showMessage(message, type = 'success') {
+        const msg = document.createElement('div');
+        msg.className = `status-message ${type}`;
+        msg.textContent = message;
+        document.body.appendChild(msg);
+
+        setTimeout(() => {
+            msg.remove();
+        }, 3000);
+    }
+
+    // Initialize admin on page load
+    checkAdminSession();
+    </script>
+</body>
+</html>
