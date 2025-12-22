@@ -408,7 +408,7 @@
         </nav>
 
         <section id="recentSection">
-            <h2 class="section-title">Literature Chronicles</h2>
+            <h2 class="section-title">Recent Literature</h2>
             <div id="talesContainer" class="tales-grid"></div>
             <div id="loadMoreContainer" style="text-align: center; margin: 40px 0; display: none;">
                 <button class="load-more-btn" onclick="loadMorePosts()">
@@ -425,7 +425,7 @@
     <script>
         let allPosts = [];
         let currentPage = 1;
-        const postsPerPage = 9; // 3x3 grid
+        const postsPerPage = 6; // 2x3 grid (2 rows of 3 columns)
 
         async function loadPostsFromGitHub() {
             try {
