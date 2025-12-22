@@ -770,7 +770,7 @@
         </header>
 
         <!-- Pinned Posts Section -->
-        <section id="pinnedSection" class="pinned-section" style="display: none;">
+        <section id="pinnedSection" class="pinned-section" style="display: none !important;">
             <h2 class="section-title">Featured Chronicles</h2>
             <div id="pinnedContainer" class="pinned-grid">
                 <!-- Pinned posts render here -->
@@ -1302,14 +1302,20 @@
             // === RENDERING ===
 
             renderTales() {
-                // Render pinned posts
-                this.renderPinnedPosts();
-
+                // Skip pinned posts rendering on home page
                 // Render recent posts with pagination
                 this.renderRecentPosts();
             }
 
             renderPinnedPosts() {
+                // Pinned section disabled on home page - pinning is for category pages only
+                const pinnedSection = document.getElementById('pinnedSection');
+                if (pinnedSection) {
+                    pinnedSection.style.display = 'none';
+                }
+                return;
+
+                /* OLD CODE - KEEP FOR REFERENCE BUT NEVER RUNS
                 const pinnedPosts = this.posts.filter(p => p.pinnedSlots?.discourse !== null);
                 const pinnedContainer = document.getElementById('pinnedContainer');
                 const pinnedSection = document.getElementById('pinnedSection');
@@ -1335,6 +1341,7 @@
                         </div>
                     `;
                 }).join('');
+                */
             }
 
             renderRecentPosts() {
@@ -1342,10 +1349,10 @@
                 const emptyState = document.getElementById('emptyState');
                 const loadMoreContainer = document.getElementById('loadMoreContainer');
 
-                // Get unpinned posts
-                const unpinnedPosts = this.posts.filter(p => p.pinnedSlots?.discourse === null);
+                // Show ALL posts on home page (pinning doesn't affect home page)
+                const allPosts = this.posts;
 
-                if (unpinnedPosts.length === 0) {
+                if (allPosts.length === 0) {
                     container.style.display = 'none';
                     emptyState.style.display = 'block';
                     loadMoreContainer.style.display = 'none';
@@ -1356,7 +1363,7 @@
                 emptyState.style.display = 'none';
 
                 // Paginate posts
-                const displayPosts = unpinnedPosts.slice(0, this.currentPage * this.postsPerPage);
+                const displayPosts = allPosts.slice(0, this.currentPage * this.postsPerPage);
 
                 container.innerHTML = displayPosts.map(post => {
                     const preview = post.content.substring(0, 200) + (post.content.length > 200 ? '...' : '');
@@ -1375,7 +1382,7 @@
                 }).join('');
 
                 // Show/hide load more button
-                if (displayPosts.length < unpinnedPosts.length) {
+                if (displayPosts.length < allPosts.length) {
                     loadMoreContainer.style.display = 'block';
                 } else {
                     loadMoreContainer.style.display = 'none';

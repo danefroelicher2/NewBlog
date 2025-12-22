@@ -917,12 +917,8 @@
             try {
                 // Load fresh data from GitHub
                 const url = 'https://api.github.com/repos/danefroelicher2/NewBlog/contents/data/posts.json';
-                const response = await fetch(url, {
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache'
-                    }
-                });
+                const cacheBuster = `?t=${Date.now()}`;
+                const response = await fetch(url + cacheBuster);
                 const data = await response.json();
                 const content = atob(data.content);
                 let posts = JSON.parse(content);
@@ -966,9 +962,7 @@
                     headers: {
                         'Authorization': `token ${token}`,
                         'Content-Type': 'application/json',
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache'
+                        'Accept': 'application/vnd.github.v3+json'
                     },
                     body: JSON.stringify(updatePayload)
                 });
