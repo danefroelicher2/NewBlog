@@ -474,7 +474,7 @@
                             <span>${formatDate(post.created)}</span>
                         </div>
                         <div class="tale-content">${escapeHtml(preview)}</div>
-                        <button class="read-tale-btn" onclick="window.location.href='index.html#view-${post.id}'">
+                        <button class="read-tale-btn" onclick="viewTale(${post.id})">
                             Read the Tale
                         </button>
                     </div>
@@ -510,6 +510,23 @@
             return div.innerHTML;
         }
 
+        function viewTale(postId) {
+            const post = allPosts.find(p => p.id === postId);
+            if (!post) return;
+
+            document.getElementById('viewTitle').textContent = post.title;
+            document.getElementById('viewMeta').innerHTML = `
+                <span>Published: ${formatDate(post.created)}</span>
+                ${post.lastModified !== post.created ? `<span>Updated: ${formatDate(post.lastModified)}</span>` : ''}
+            `;
+            document.getElementById('viewContent').textContent = post.content;
+            document.getElementById('viewModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
         // Initialize on page load
         (async function() {
             await loadPostsFromGitHub();
@@ -528,6 +545,16 @@
         // Run on page load
         checkAdminIndicator();
     </script>
+
+    <!-- View Tale Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('viewModal')">&times;</button>
+            <h2 class="modal-header" id="viewTitle"></h2>
+            <div id="viewMeta" class="tale-meta" style="justify-content: center; margin-bottom: 30px;"></div>
+            <div id="viewContent" style="font-size: 1.1rem; line-height: 1.9; color: var(--ink-medium); white-space: pre-wrap;"></div>
+        </div>
+    </div>
 
 </body>
 </html>
