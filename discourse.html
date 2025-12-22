@@ -469,6 +469,199 @@
         .close-modal:hover {
             color: var(--ink-dark);
         }
+
+        /* Pin Icon */
+        .pin-icon {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--parchment-light);
+            border: 2px solid var(--gold-accent);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pin-icon:hover {
+            background: var(--gold-accent);
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        /* Pin Slot Selection */
+        .pin-slot-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .pin-slot-btn {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            color: var(--parchment-light);
+            background: var(--gold-dark);
+            border: 2px solid var(--border-ornate);
+            padding: 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pin-slot-btn:hover {
+            background: var(--gold-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .pin-slot-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Button Styles */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            font-family: var(--font-heading);
+            flex: 1;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 2px solid var(--border-ornate);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--gold-dark);
+            color: var(--parchment-light);
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-accent);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--parchment-dark);
+            color: var(--ink-dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--ink-light);
+            color: var(--parchment-light);
+        }
+
+        /* Pinned Posts Section */
+        .pinned-section {
+            margin-bottom: 60px;
+        }
+
+        .pinned-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        /* Pinned cards - slots 1 & 2 are large (top row) */
+        .pinned-card {
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(43,24,16,0.05) 100%),
+                url('textures/parchment.jpg'),
+                var(--parchment-light);
+            background-size: cover;
+            border: 4px solid var(--gold-accent);
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 10px 25px var(--shadow);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .pinned-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px var(--shadow);
+        }
+
+        /* Slots 1 & 2 span full width */
+        .pinned-card.large {
+            grid-column: span 2;
+            padding: 50px;
+        }
+
+        /* Slots 3, 4, 5 are regular size (bottom row, 3 columns) */
+        .pinned-card:not(.large) {
+            grid-column: span 1;
+        }
+
+        /* Make bottom row 3 columns */
+        .pinned-grid:has(.pinned-card:not(.large)) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .slot-badge {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--gold-accent);
+            color: var(--parchment-light);
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .pin-icon.pinned {
+            background: var(--gold-accent);
+            border-color: var(--gold-dark);
+        }
+
+        /* Section Divider */
+        .section-divider {
+            text-align: center;
+            margin: 60px 0;
+            position: relative;
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--gold-accent), transparent);
+        }
+
+        .section-divider::before {
+            left: 0;
+        }
+
+        .section-divider::after {
+            right: 0;
+        }
+
+        .divider-ornament {
+            font-size: 1.5rem;
+            color: var(--gold-accent);
+            background: var(--parchment-light);
+            padding: 10px 30px;
+            position: relative;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
@@ -496,6 +689,17 @@
             <span class="sub-separator">|</span>
             <a href="literature.html" class="sub-link">Literature</a>
         </nav>
+
+        <!-- Pinned Posts Section -->
+        <section id="pinnedSection" class="pinned-section" style="display: none;">
+            <h2 class="section-title">Featured Chronicles</h2>
+            <div id="pinnedContainer" class="pinned-grid"></div>
+        </section>
+
+        <!-- Section Divider -->
+        <div class="section-divider">
+            <span class="divider-ornament">✦ ✦ ✦</span>
+        </div>
 
         <!-- Recent Tales Section -->
         <section id="recentSection">
@@ -547,7 +751,7 @@
             const loadMoreContainer = document.getElementById('loadMoreContainer');
 
             // Get all posts (no category filter for discourse main page)
-            const filteredPosts = allPosts.filter(p => !p.isPinned);
+            const filteredPosts = allPosts.filter(p => p.pinnedSlots?.discourse === null);
 
             if (filteredPosts.length === 0) {
                 container.innerHTML = '<p style="text-align: center; color: var(--ink-medium); font-style: italic; padding: 60px;">No tales yet...</p>';
@@ -562,6 +766,11 @@
                 const preview = post.content.substring(0, 150) + (post.content.length > 150 ? '...' : '');
                 return `
                     <div class="tale-card">
+                        ${sessionStorage.getItem('questJournalAdmin') ? `
+                            <button class="pin-icon" onclick="event.stopPropagation(); showPinSlotModal(${post.id})" title="Pin this post">
+                                📌
+                            </button>
+                        ` : ''}
                         <h3 class="tale-title">${escapeHtml(post.title)}</h3>
                         <div class="tale-meta">
                             <span>${formatDate(post.created)}</span>
@@ -587,6 +796,52 @@
             currentPage++;
             renderPosts();
             document.getElementById('recentSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function renderPinnedPosts() {
+            const pinnedSection = document.getElementById('pinnedSection');
+            const pinnedContainer = document.getElementById('pinnedContainer');
+
+            // Get posts pinned to discourse slots
+            const pinnedPosts = allPosts
+                .filter(p => p.pinnedSlots?.discourse !== null)
+                .sort((a, b) => a.pinnedSlots.discourse - b.pinnedSlots.discourse); // Sort by slot number
+
+            if (pinnedPosts.length === 0) {
+                pinnedSection.style.display = 'none';
+                return;
+            }
+
+            pinnedSection.style.display = 'block';
+
+            // Create HTML for pinned posts
+            const pinnedHTML = pinnedPosts.map(post => {
+                const slotNumber = post.pinnedSlots.discourse;
+                const isLarge = slotNumber <= 2; // Slots 1 and 2 are large
+                const preview = post.content.substring(0, isLarge ? 300 : 150) + (post.content.length > (isLarge ? 300 : 150) ? '...' : '');
+
+                return `
+                    <div class="pinned-card ${isLarge ? 'large' : ''}" data-slot="${slotNumber}">
+                        <div class="slot-badge">Slot ${slotNumber}</div>
+                        ${sessionStorage.getItem('questJournalAdmin') ? `
+                            <button class="pin-icon pinned" onclick="event.stopPropagation(); showPinSlotModal(${post.id})" title="Re-pin to different slot">
+                                📌
+                            </button>
+                        ` : ''}
+                        <h3 class="tale-title">${escapeHtml(post.title)}</h3>
+                        <div class="tale-meta">
+                            <span>${formatDate(post.created)}</span>
+                            ${post.category ? `<span>Category: ${capitalize(post.category)}</span>` : ''}
+                        </div>
+                        <div class="tale-content">${escapeHtml(preview)}</div>
+                        <button class="read-tale-btn" onclick="viewTale(${post.id})">
+                            Read the Tale
+                        </button>
+                    </div>
+                `;
+            }).join('');
+
+            pinnedContainer.innerHTML = pinnedHTML;
         }
 
         function formatDate(isoString) {
@@ -625,9 +880,113 @@
             document.getElementById(modalId).classList.remove('active');
         }
 
+        // Pin management variables
+        let pendingPinPostId = null;
+        let pendingPinSlot = null;
+
+        function showPinSlotModal(postId) {
+            pendingPinPostId = postId;
+            document.getElementById('pinSlotModal').classList.add('active');
+        }
+
+        async function selectPinSlot(slotNumber) {
+            pendingPinSlot = slotNumber;
+
+            // Check if slot is already occupied
+            const occupyingPost = allPosts.find(p => p.pinnedSlots?.discourse === slotNumber);
+
+            if (occupyingPost) {
+                // Show confirmation modal
+                const message = `Slot ${slotNumber} is currently occupied by "${occupyingPost.title}". Replace it with the selected post?`;
+                document.getElementById('confirmMessage').textContent = message;
+                closeModal('pinSlotModal');
+                document.getElementById('pinConfirmModal').classList.add('active');
+            } else {
+                // Slot is free, pin directly
+                await pinPostToSlot(pendingPinPostId, slotNumber);
+                closeModal('pinSlotModal');
+            }
+        }
+
+        async function confirmPinReplacement() {
+            await pinPostToSlot(pendingPinPostId, pendingPinSlot);
+            closeModal('pinConfirmModal');
+        }
+
+        async function pinPostToSlot(postId, slotNumber) {
+            try {
+                // Load fresh data from GitHub
+                const url = 'https://api.github.com/repos/danefroelicher2/NewBlog/contents/data/posts.json';
+                const response = await fetch(url);
+                const data = await response.json();
+                const content = atob(data.content);
+                let posts = JSON.parse(content);
+
+                // Find the post to pin
+                const postToPin = posts.find(p => p.id === postId);
+                if (!postToPin) {
+                    alert('Post not found');
+                    return;
+                }
+
+                // Check if another post occupies this slot and unpin it
+                posts.forEach(p => {
+                    if (p.pinnedSlots?.discourse === slotNumber && p.id !== postId) {
+                        p.pinnedSlots.discourse = null;
+                    }
+                });
+
+                // Pin the selected post to the slot
+                postToPin.pinnedSlots.discourse = slotNumber;
+
+                // Save to GitHub
+                const updatePayload = {
+                    message: `Pin post to discourse slot ${slotNumber} - ${new Date().toISOString()}`,
+                    content: btoa(JSON.stringify(posts, null, 2)),
+                    sha: data.sha,
+                    branch: 'main'
+                };
+
+                const session = sessionStorage.getItem('questJournalAdmin');
+                if (!session) {
+                    alert('Not authenticated. Please login.');
+                    return;
+                }
+
+                const sessionData = JSON.parse(session);
+                const token = sessionData.token;
+
+                const saveResponse = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify(updatePayload)
+                });
+
+                if (!saveResponse.ok) {
+                    throw new Error('Failed to save to GitHub');
+                }
+
+                // Reload posts and refresh UI
+                allPosts = posts;
+                renderPosts();
+                renderPinnedPosts();
+
+                alert(`Post pinned to slot ${slotNumber}!`);
+
+            } catch (error) {
+                console.error('Error pinning post:', error);
+                alert('Failed to pin post: ' + error.message);
+            }
+        }
+
         // Initialize on page load
         (async function() {
             await loadPostsFromGitHub();
+            renderPinnedPosts();
             renderPosts();
         })();
 
@@ -651,6 +1010,36 @@
             <h2 class="modal-header" id="viewTitle"></h2>
             <div id="viewMeta" class="tale-meta" style="justify-content: center; margin-bottom: 30px;"></div>
             <div id="viewContent" style="font-size: 1.1rem; line-height: 1.9; color: var(--ink-medium); white-space: pre-wrap;"></div>
+        </div>
+    </div>
+
+    <!-- Pin Slot Selection Modal -->
+    <div id="pinSlotModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('pinSlotModal')">&times;</button>
+            <h2 class="modal-header">Choose Pin Slot</h2>
+            <p style="text-align: center; color: var(--ink-medium); margin-bottom: 25px;">
+                Select which slot (1-5) to pin this post to:
+            </p>
+            <div class="pin-slot-grid">
+                <button class="pin-slot-btn" onclick="selectPinSlot(1)">Slot 1 (Top Left)</button>
+                <button class="pin-slot-btn" onclick="selectPinSlot(2)">Slot 2 (Top Right)</button>
+                <button class="pin-slot-btn" onclick="selectPinSlot(3)">Slot 3 (Bottom Left)</button>
+                <button class="pin-slot-btn" onclick="selectPinSlot(4)">Slot 4 (Bottom Center)</button>
+                <button class="pin-slot-btn" onclick="selectPinSlot(5)">Slot 5 (Bottom Right)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pin Replacement Confirmation Modal -->
+    <div id="pinConfirmModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-header">Replace Pinned Post?</h2>
+            <p id="confirmMessage" style="text-align: center; color: var(--ink-medium); margin-bottom: 25px;"></p>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="confirmPinReplacement()">Yes, Replace</button>
+                <button class="btn btn-secondary" onclick="closeModal('pinConfirmModal')">Cancel</button>
+            </div>
         </div>
     </div>
 

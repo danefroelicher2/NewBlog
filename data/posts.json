@@ -6,7 +6,12 @@
     "category": null,
     "created": "2025-12-22T02:25:26.858Z",
     "lastModified": "2025-12-22T02:25:26.858Z",
-    "isPinned": false
+    "pinnedSlots": {
+      "discourse": null,
+      "tech": null,
+      "history": null,
+      "literature": null
+    }
   },
   {
     "id": 1766369043723,
@@ -15,7 +20,12 @@
     "category": null,
     "created": "2025-12-22T02:04:03.723Z",
     "lastModified": "2025-12-22T02:04:03.723Z",
-    "isPinned": false
+    "pinnedSlots": {
+      "discourse": null,
+      "tech": null,
+      "history": null,
+      "literature": null
+    }
   },
   {
     "id": 1766369017400,
@@ -24,7 +34,12 @@
     "category": "tech",
     "created": "2025-12-22T02:03:37.400Z",
     "lastModified": "2025-12-22T02:03:37.400Z",
-    "isPinned": false
+    "pinnedSlots": {
+      "discourse": null,
+      "tech": null,
+      "history": null,
+      "literature": null
+    }
   },
   {
     "id": 1766358893495,
@@ -33,7 +48,12 @@
     "category": null,
     "created": "2025-12-21T23:14:53.495Z",
     "lastModified": "2025-12-21T23:14:53.495Z",
-    "isPinned": false
+    "pinnedSlots": {
+      "discourse": null,
+      "tech": null,
+      "history": null,
+      "literature": null
+    }
   },
   {
     "id": 1766358868655,
@@ -42,7 +62,12 @@
     "category": null,
     "created": "2025-12-21T23:14:28.655Z",
     "lastModified": "2025-12-21T23:14:28.655Z",
-    "isPinned": false
+    "pinnedSlots": {
+      "discourse": null,
+      "tech": null,
+      "history": null,
+      "literature": null
+    }
   },
   {
     "id": 1766335401320,
@@ -50,7 +75,12 @@
     "content": "676767",
     "created": "2025-12-21T16:43:21.320Z",
     "lastModified": "2025-12-21T16:43:21.320Z",
-    "isPinned": false
+    "pinnedSlots": {
+      "discourse": null,
+      "tech": null,
+      "history": null,
+      "literature": null
+    }
   },
   {
     "id": 1766182437272,
@@ -58,13 +88,24 @@
     "content": "test123434",
     "created": "2025-12-19T22:13:57.272Z",
     "lastModified": "2025-12-19T22:14:46.771Z",
-    "isPinned": false
+    "pinnedSlots": {
+      "discourse": null,
+      "tech": null,
+      "history": null,
+      "literature": null
+    }
   },
   {
     "id": 1734393600000,
     "title": "Welcome to The Quest Journal",
     "content": "This is your first tale in The Quest Journal! \n\nThis journal is designed to chronicle your learning adventures with a medieval aesthetic. Each post is a \"tale\" in your ongoing quest for knowledge.\n\nTo begin writing:\n1. Click the hidden admin symbol (⚔) in the footer\n2. Enter your password\n3. Optionally add your GitHub token for cross-device sync\n4. Start penning your tales!\n\nYour posts will be stored in this repository and visible to anyone who visits your GitHub Pages site. This makes it perfect for sharing your learning journey with potential employers.\n\nFeel free to delete this welcome post once you're ready to start your own chronicle!",
     "created": "2024-12-17T00:00:00.000Z",
-    "lastModified": "2024-12-17T00:00:00.000Z"
+    "lastModified": "2024-12-17T00:00:00.000Z",
+    "pinnedSlots": {
+      "discourse": null,
+      "tech": null,
+      "history": null,
+      "literature": null
+    }
   }
 ]

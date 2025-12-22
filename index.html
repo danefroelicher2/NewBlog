@@ -1213,7 +1213,12 @@
                     category: category || null,
                     created: this.currentEditingPost ? this.currentEditingPost.created : new Date().toISOString(),
                     lastModified: new Date().toISOString(),
-                    isPinned: this.currentEditingPost ? (this.currentEditingPost.isPinned || false) : false
+                    pinnedSlots: this.currentEditingPost?.pinnedSlots || {
+                        discourse: null,
+                        tech: null,
+                        history: null,
+                        literature: null
+                    }
                 };
 
                 if (this.currentEditingPost && this.currentEditingPost.isDraft) {
@@ -1258,17 +1263,9 @@
             }
 
             async togglePin() {
-                if (!this.currentViewingPost) return;
-
-                const post = this.posts.find(p => p.id === this.currentViewingPost.id);
-                if (post) {
-                    post.isPinned = !post.isPinned;
-                    await this.savePostsToGitHub();
-                    this.currentPage = 1; // Reset pagination
-                    this.renderTales();
-                    this.closeModal('viewModal');
-                    this.showMessage(post.isPinned ? 'Post pinned!' : 'Post unpinned!', 'success');
-                }
+                // This function is deprecated - use the new slot-based pinning system
+                this.showMessage('Please use the pin icon to select a slot', 'error');
+                this.closeModal('viewModal');
             }
 
             viewTale(postId) {
@@ -1313,7 +1310,7 @@
             }
 
             renderPinnedPosts() {
-                const pinnedPosts = this.posts.filter(p => p.isPinned);
+                const pinnedPosts = this.posts.filter(p => p.pinnedSlots?.discourse !== null);
                 const pinnedContainer = document.getElementById('pinnedContainer');
                 const pinnedSection = document.getElementById('pinnedSection');
 
@@ -1346,7 +1343,7 @@
                 const loadMoreContainer = document.getElementById('loadMoreContainer');
 
                 // Get unpinned posts
-                const unpinnedPosts = this.posts.filter(p => !p.isPinned);
+                const unpinnedPosts = this.posts.filter(p => p.pinnedSlots?.discourse === null);
 
                 if (unpinnedPosts.length === 0) {
                     container.style.display = 'none';
