@@ -102,7 +102,7 @@
     "created": "2024-12-17T00:00:00.000Z",
     "lastModified": "2024-12-17T00:00:00.000Z",
     "pinnedSlots": {
-      "discourse": null,
+      "discourse": 5,
       "tech": null,
       "history": null,
       "literature": null
