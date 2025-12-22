@@ -917,7 +917,12 @@
             try {
                 // Load fresh data from GitHub
                 const url = 'https://api.github.com/repos/danefroelicher2/NewBlog/contents/data/posts.json';
-                const response = await fetch(url);
+                const response = await fetch(url, {
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
+                    }
+                });
                 const data = await response.json();
                 const content = atob(data.content);
                 let posts = JSON.parse(content);
@@ -961,7 +966,9 @@
                     headers: {
                         'Authorization': `token ${token}`,
                         'Content-Type': 'application/json',
-                        'Accept': 'application/vnd.github.v3+json'
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
                     },
                     body: JSON.stringify(updatePayload)
                 });
@@ -970,8 +977,8 @@
                     throw new Error('Failed to save to GitHub');
                 }
 
-                // Reload posts and refresh UI
-                allPosts = posts;
+                // Reload posts from GitHub to get fresh data and refresh UI
+                await loadPostsFromGitHub();
                 renderPosts();
                 renderPinnedPosts();
 
