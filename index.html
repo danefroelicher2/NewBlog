@@ -784,22 +784,14 @@
             overflow: hidden;
         }
 
-        .carousel-image-container {
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-            border-radius: 10px;
-            aspect-ratio: 3/4; /* Portrait orientation */
-            height: 520px; /* Fixed height to match About Me card */
-        }
-
         .carousel-image {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: auto;
+            display: block;
             border-radius: 10px;
             box-shadow: 0 5px 15px var(--shadow);
-            transition: opacity 0.3s ease;
+            aspect-ratio: 3/4; /* Portrait orientation for iPhone photos */
+            object-fit: cover;
         }
 
         .carousel-btn {
@@ -854,7 +846,6 @@
             font-size: 1rem;
             color: var(--ink-dark);
             box-shadow: 0 4px 12px var(--shadow);
-            z-index: 10;
         }
 
         /* About Me Card */
@@ -1090,9 +1081,7 @@
                 <div class="carousel-container">
                     <div class="carousel-card">
                         <button class="carousel-btn carousel-prev" onclick="prevImage()">←</button>
-                        <div class="carousel-image-container">
-                            <img id="carouselImage" src="images/home/photo-1.jpg" alt="Dane's photo" class="carousel-image">
-                        </div>
+                        <img id="carouselImage" src="images/home/photo-1.jpg" alt="Dane's photo" class="carousel-image">
                         <button class="carousel-btn carousel-next" onclick="nextImage()">→</button>
                         <div class="carousel-indicator">
                             <span id="currentSlide">1</span> / 10
@@ -1753,33 +1742,22 @@
             }
         })();
 
-        // Simple Image Carousel with Fade
+        // Image Carousel
         let currentImageIndex = 1;
         const totalImages = 10;
-        let isAnimating = false;
 
         function updateCarousel() {
-            if (isAnimating) return;
-            isAnimating = true;
-
             const image = document.getElementById('carouselImage');
             const indicator = document.getElementById('currentSlide');
 
-            // Fade out
+            image.src = `images/home/photo-${currentImageIndex}.jpg`;
+            indicator.textContent = currentImageIndex;
+
+            // Add fade animation
             image.style.opacity = '0';
-
             setTimeout(() => {
-                // Change image source
-                image.src = `images/home/photo-${currentImageIndex}.jpg`;
-                indicator.textContent = currentImageIndex;
-
-                // Fade in
                 image.style.opacity = '1';
-
-                setTimeout(() => {
-                    isAnimating = false;
-                }, 300);
-            }, 300);
+            }, 50);
         }
 
         function nextImage() {
@@ -1798,44 +1776,20 @@
             updateCarousel();
         }
 
-        // Keyboard navigation
+        // Add smooth fade transition to image
+        document.addEventListener('DOMContentLoaded', function() {
+            const image = document.getElementById('carouselImage');
+            if (image) {
+                image.style.transition = 'opacity 0.3s ease';
+            }
+        });
+
+        // Optional: Add keyboard navigation (left/right arrows)
         document.addEventListener('keydown', function(e) {
             if (e.key === 'ArrowLeft') {
                 prevImage();
             } else if (e.key === 'ArrowRight') {
                 nextImage();
-            }
-        });
-
-        // Touch swipe support for mobile
-        let touchStartX = 0;
-        let touchEndX = 0;
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const carouselCard = document.querySelector('.carousel-card');
-
-            if (carouselCard) {
-                carouselCard.addEventListener('touchstart', function(e) {
-                    touchStartX = e.changedTouches[0].screenX;
-                });
-
-                carouselCard.addEventListener('touchend', function(e) {
-                    touchEndX = e.changedTouches[0].screenX;
-                    handleSwipe();
-                });
-
-                function handleSwipe() {
-                    const swipeThreshold = 50;
-                    const diff = touchStartX - touchEndX;
-
-                    if (Math.abs(diff) > swipeThreshold) {
-                        if (diff > 0) {
-                            nextImage();
-                        } else {
-                            prevImage();
-                        }
-                    }
-                }
             }
         });
     </script>
