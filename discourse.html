@@ -156,12 +156,12 @@
             top: 100%;
             left: 50%;
             transform: translateX(-50%);
-            margin-top: 10px; /* REDUCED from 15px to 10px */
+            margin-top: 10px;
             background: var(--parchment-light);
             border: 3px solid var(--border-ornate);
             border-radius: 8px;
             box-shadow: 0 8px 25px var(--shadow);
-            padding: 15px 0;
+            padding: 8px 0; /* REDUCED from 15px to 8px */
             min-width: 180px;
             z-index: 1000;
         }
@@ -200,7 +200,7 @@
             font-size: 1.1rem;
             color: var(--ink-dark);
             text-decoration: none;
-            padding: 12px 30px;
+            padding: 10px 30px; /* REDUCED from 12px to 10px vertical padding */
             display: block;
             transition: all 0.3s ease;
             letter-spacing: 1px;
@@ -209,15 +209,6 @@
         .dropdown-item:hover {
             background: var(--gold-accent);
             color: var(--parchment-light);
-        }
-
-        .dropdown-divider {
-            display: block;
-            text-align: center;
-            color: var(--gold-accent);
-            font-size: 0.8rem;
-            margin: 8px 0;
-            pointer-events: none;
         }
 
         /* Subtle highlight when on discourse sub-pages */
@@ -766,9 +757,7 @@
                     <a href="discourse.html" class="nav-link discourse-link">Discourse</a>
                     <div class="nav-dropdown">
                         <a href="tech.html" class="dropdown-item">Tech</a>
-                        <span class="dropdown-divider">✦</span>
                         <a href="history.html" class="dropdown-item">History</a>
-                        <span class="dropdown-divider">✦</span>
                         <a href="literature.html" class="dropdown-item">Literature</a>
                     </div>
                 </div>
@@ -1104,11 +1093,6 @@
                     homeOption.className = 'dropdown-item dropdown-mobile-home';
                     homeOption.textContent = 'Discourse Home';
                     dropdown.insertBefore(homeOption, dropdown.firstChild);
-
-                    const homeDivider = document.createElement('span');
-                    homeDivider.className = 'dropdown-divider dropdown-mobile-home';
-                    homeDivider.textContent = '✦';
-                    dropdown.insertBefore(homeDivider, dropdown.children[1]);
 
                     // Toggle dropdown on click
                     discourseLink.addEventListener('click', function(e) {
