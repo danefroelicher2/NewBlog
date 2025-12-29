@@ -56,19 +56,6 @@
     }
   },
   {
-    "id": 1766182437272,
-    "title": "test123",
-    "content": "test123434",
-    "created": "2025-12-19T22:13:57.272Z",
-    "lastModified": "2025-12-19T22:14:46.771Z",
-    "pinnedSlots": {
-      "discourse": 3,
-      "tech": null,
-      "history": null,
-      "literature": null
-    }
-  },
-  {
     "id": 1734393600000,
     "title": "Welcome to The Quest Journal",
     "content": "This is your first tale in The Quest Journal! \n\nThis journal is designed to chronicle your learning adventures with a medieval aesthetic. Each post is a \"tale\" in your ongoing quest for knowledge.\n\nTo begin writing:\n1. Click the hidden admin symbol (⚔) in the footer\n2. Enter your password\n3. Optionally add your GitHub token for cross-device sync\n4. Start penning your tales!\n\nYour posts will be stored in this repository and visible to anyone who visits your GitHub Pages site. This makes it perfect for sharing your learning journey with potential employers.\n\nFeel free to delete this welcome post once you're ready to start your own chronicle!",
