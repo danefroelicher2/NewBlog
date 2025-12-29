@@ -118,60 +118,117 @@
             font-size: 1.5rem;
         }
 
-        .sub-nav {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 25px;
-            max-width: 900px;
-            margin: 0 auto 50px;
-            flex-wrap: wrap;
+        /* Dropdown Navigation */
+        .nav-dropdown-wrapper {
+            position: relative;
+            display: inline-block;
         }
 
-        .sub-link {
-            font-family: var(--font-heading);
-            font-size: 1.2rem;
-            color: var(--ink-dark);
-            text-decoration: none;
-            padding: 20px 35px;
-            background:
-                linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(43,24,16,0.05) 100%),
-                url('textures/parchment.jpg'),
-                var(--parchment-light);
-            background-size: cover;
+        .discourse-link {
+            /* Same styles as .nav-link, already applied */
+        }
+
+        .nav-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 15px;
+            background: var(--parchment-light);
             border: 3px solid var(--border-ornate);
             border-radius: 8px;
-            box-shadow: 0 5px 15px var(--shadow);
+            box-shadow: 0 8px 25px var(--shadow);
+            padding: 15px 0;
+            min-width: 180px;
+            z-index: 1000;
+        }
+
+        .nav-dropdown::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid var(--border-ornate);
+        }
+
+        .nav-dropdown-wrapper:hover .nav-dropdown {
+            display: block;
+        }
+
+        .dropdown-item {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            color: var(--ink-dark);
+            text-decoration: none;
+            padding: 12px 30px;
+            display: block;
             transition: all 0.3s ease;
-            position: relative;
             letter-spacing: 1px;
         }
 
-        .sub-link::before {
-            content: '✦';
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.3rem;
-            color: var(--gold-accent);
-            background: var(--parchment-light);
-            padding: 0 10px;
-        }
-
-        .sub-link:hover {
-            background:
-                linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 50%, rgba(43,24,16,0.08) 100%),
-                url('textures/parchment.jpg'),
-                var(--gold-accent);
-            background-size: cover;
+        .dropdown-item:hover {
+            background: var(--gold-accent);
             color: var(--parchment-light);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px var(--shadow);
         }
 
-        .sub-separator {
-            display: none;
+        .dropdown-divider {
+            display: block;
+            text-align: center;
+            color: var(--gold-accent);
+            font-size: 0.8rem;
+            margin: 8px 0;
+            pointer-events: none;
+        }
+
+        /* Subtle highlight when on discourse sub-pages */
+        .discourse-link.active-section {
+            color: var(--gold-accent);
+            position: relative;
+        }
+
+        .discourse-link.active-section::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: var(--gold-accent);
+            opacity: 0.6;
+        }
+
+        /* Mobile Dropdown Behavior */
+        @media (max-width: 768px) {
+            .nav-dropdown-wrapper:hover .nav-dropdown {
+                display: none; /* Disable hover on mobile */
+            }
+
+            .nav-dropdown-wrapper.mobile-open .nav-dropdown {
+                display: block;
+            }
+
+            .discourse-link {
+                pointer-events: none; /* Prevent navigation on mobile */
+            }
+
+            /* Add "Discourse Home" option for mobile */
+            .nav-dropdown::before {
+                content: '';
+            }
+
+            .dropdown-mobile-home {
+                display: block !important;
+            }
+        }
+
+        .dropdown-mobile-home {
+            display: none; /* Hidden on desktop */
         }
 
         .section-title {
@@ -454,17 +511,18 @@
             <nav class="main-nav">
                 <a href="index.html" class="nav-link">Home</a>
                 <span class="nav-separator">·</span>
-                <a href="discourse.html" class="nav-link">Discourse</a>
+                <div class="nav-dropdown-wrapper">
+                    <a href="discourse.html" class="nav-link discourse-link">Discourse</a>
+                    <div class="nav-dropdown">
+                        <a href="tech.html" class="dropdown-item">Tech</a>
+                        <span class="dropdown-divider">✦</span>
+                        <a href="history.html" class="dropdown-item">History</a>
+                        <span class="dropdown-divider">✦</span>
+                        <a href="literature.html" class="dropdown-item">Literature</a>
+                    </div>
+                </div>
             </nav>
         </header>
-
-        <nav class="sub-nav">
-            <a href="tech.html" class="sub-link">Tech</a>
-            <span class="sub-separator">|</span>
-            <a href="history.html" class="sub-link">History</a>
-            <span class="sub-separator">|</span>
-            <a href="literature.html" class="sub-link">Literature</a>
-        </nav>
 
         <section id="recentSection">
             <h2 class="section-title">Recent Tech</h2>
@@ -603,6 +661,52 @@
 
         // Run on page load
         checkAdminIndicator();
+
+        // Highlight "Discourse" in nav when on sub-page
+        document.addEventListener('DOMContentLoaded', function() {
+            const discourseLink = document.querySelector('.discourse-link');
+            if (discourseLink) {
+                discourseLink.classList.add('active-section');
+            }
+        });
+
+        // Mobile dropdown toggle
+        (function() {
+            const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+            if (isMobile) {
+                const dropdownWrapper = document.querySelector('.nav-dropdown-wrapper');
+                const discourseLink = document.querySelector('.discourse-link');
+
+                if (dropdownWrapper) {
+                    // Add mobile-specific "Discourse Home" option
+                    const dropdown = dropdownWrapper.querySelector('.nav-dropdown');
+                    const homeOption = document.createElement('a');
+                    homeOption.href = 'discourse.html';
+                    homeOption.className = 'dropdown-item dropdown-mobile-home';
+                    homeOption.textContent = 'Discourse Home';
+                    dropdown.insertBefore(homeOption, dropdown.firstChild);
+
+                    const homeDivider = document.createElement('span');
+                    homeDivider.className = 'dropdown-divider dropdown-mobile-home';
+                    homeDivider.textContent = '✦';
+                    dropdown.insertBefore(homeDivider, dropdown.children[1]);
+
+                    // Toggle dropdown on click
+                    discourseLink.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        dropdownWrapper.classList.toggle('mobile-open');
+                    });
+
+                    // Close dropdown when clicking outside
+                    document.addEventListener('click', function(e) {
+                        if (!dropdownWrapper.contains(e.target)) {
+                            dropdownWrapper.classList.remove('mobile-open');
+                        }
+                    });
+                }
+            }
+        })();
     </script>
 
     <!-- View Tale Modal -->
