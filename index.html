@@ -759,7 +759,7 @@
 
         .hero-row {
             display: grid;
-            grid-template-columns: 400px 1fr;
+            grid-template-columns: 450px 1fr; /* Increased from 400px to 450px */
             gap: 40px;
             margin-bottom: 40px;
             align-items: start;
@@ -782,6 +782,14 @@
             box-shadow: 0 10px 30px var(--shadow);
             position: relative;
             overflow: hidden;
+            height: 100%; /* Make card fill available height */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .carousel-card::after {
+            content: '';
+            flex-grow: 1; /* Push indicator to bottom */
         }
 
         .carousel-image-container {
@@ -790,6 +798,7 @@
             overflow: hidden;
             border-radius: 10px;
             aspect-ratio: 3/4; /* Portrait orientation */
+            min-height: 600px; /* Increased minimum height to match About Me */
         }
 
         .carousel-image {
