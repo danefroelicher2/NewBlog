@@ -784,14 +784,65 @@
             overflow: hidden;
         }
 
-        .carousel-image {
+        .carousel-image-container {
+            position: relative;
             width: 100%;
-            height: auto;
-            display: block;
+            overflow: hidden;
+            border-radius: 10px;
+            aspect-ratio: 3/4; /* Portrait orientation */
+        }
+
+        .carousel-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             border-radius: 10px;
             box-shadow: 0 5px 15px var(--shadow);
-            aspect-ratio: 3/4; /* Portrait orientation for iPhone photos */
-            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1), opacity 0.5s ease;
+            will-change: transform, opacity;
+        }
+
+        /* Image states */
+        .carousel-image.active {
+            transform: translateX(0);
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .carousel-image.next {
+            transform: translateX(100%);
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .carousel-image.prev {
+            transform: translateX(-100%);
+            opacity: 0;
+            z-index: 1;
+        }
+
+        /* Slide animations */
+        .carousel-image.slide-out-left {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+
+        .carousel-image.slide-out-right {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+
+        .carousel-image.slide-in-left {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .carousel-image.slide-in-right {
+            transform: translateX(0);
+            opacity: 1;
         }
 
         .carousel-btn {
@@ -829,6 +880,10 @@
             transform: translateY(-50%) scale(1.1);
         }
 
+        .carousel-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
         .carousel-indicator {
             position: absolute;
             bottom: 30px;
@@ -842,6 +897,7 @@
             font-size: 1rem;
             color: var(--ink-dark);
             box-shadow: 0 4px 12px var(--shadow);
+            z-index: 10;
         }
 
         /* About Me Card */
@@ -1077,7 +1133,10 @@
                 <div class="carousel-container">
                     <div class="carousel-card">
                         <button class="carousel-btn carousel-prev" onclick="prevImage()">←</button>
-                        <img id="carouselImage" src="images/home/photo-1.jpg" alt="Dane's photo" class="carousel-image">
+                        <div class="carousel-image-container">
+                            <img id="carouselImage" src="images/home/photo-1.jpg" alt="Dane's photo" class="carousel-image active">
+                            <img id="carouselImageNext" src="images/home/photo-2.jpg" alt="Dane's photo" class="carousel-image next">
+                        </div>
                         <button class="carousel-btn carousel-next" onclick="nextImage()">→</button>
                         <div class="carousel-indicator">
                             <span id="currentSlide">1</span> / 10
@@ -1733,54 +1792,134 @@
             }
         })();
 
-        // Image Carousel
+        // Image Carousel with Smooth Slide Animation
         let currentImageIndex = 1;
         const totalImages = 10;
+        let isAnimating = false;
 
-        function updateCarousel() {
-            const image = document.getElementById('carouselImage');
+        // Preload all images for smooth transitions
+        const imageCache = [];
+        function preloadImages() {
+            for (let i = 1; i <= totalImages; i++) {
+                const img = new Image();
+                img.src = `images/home/photo-${i}.jpg`;
+                imageCache.push(img);
+            }
+        }
+
+        // Call preload on page load
+        preloadImages();
+
+        function getNextIndex(direction) {
+            if (direction === 'next') {
+                return currentImageIndex === totalImages ? 1 : currentImageIndex + 1;
+            } else {
+                return currentImageIndex === 1 ? totalImages : currentImageIndex - 1;
+            }
+        }
+
+        function slideToImage(direction) {
+            // Prevent multiple clicks during animation
+            if (isAnimating) return;
+            isAnimating = true;
+
+            const currentImg = document.getElementById('carouselImage');
+            const nextImg = document.getElementById('carouselImageNext');
             const indicator = document.getElementById('currentSlide');
 
-            image.src = `images/home/photo-${currentImageIndex}.jpg`;
+            // Calculate new index
+            const newIndex = getNextIndex(direction);
+
+            if (direction === 'next') {
+                // Current image slides out to LEFT
+                currentImg.classList.remove('active');
+                currentImg.classList.add('slide-out-left');
+
+                // Next image slides in from RIGHT
+                nextImg.src = `images/home/photo-${newIndex}.jpg`;
+                nextImg.classList.remove('next', 'slide-out-right');
+                nextImg.classList.add('slide-in-right', 'active');
+
+            } else {
+                // Current image slides out to RIGHT
+                currentImg.classList.remove('active');
+                currentImg.classList.add('slide-out-right');
+
+                // Next image slides in from LEFT
+                nextImg.src = `images/home/photo-${newIndex}.jpg`;
+                nextImg.classList.remove('next', 'slide-out-left');
+                nextImg.classList.add('slide-in-left', 'active');
+            }
+
+            // Update index and indicator
+            currentImageIndex = newIndex;
             indicator.textContent = currentImageIndex;
 
-            // Add fade animation
-            image.style.opacity = '0';
+            // After animation completes, swap image elements
             setTimeout(() => {
-                image.style.opacity = '1';
-            }, 50);
+                // Swap the images
+                const currentSrc = currentImg.src;
+                const nextSrc = nextImg.src;
+
+                currentImg.src = nextSrc;
+                nextImg.src = currentSrc;
+
+                // Reset classes
+                currentImg.className = 'carousel-image active';
+                nextImg.className = 'carousel-image next';
+
+                isAnimating = false;
+            }, 500); // Match CSS transition duration
         }
 
         function nextImage() {
-            currentImageIndex++;
-            if (currentImageIndex > totalImages) {
-                currentImageIndex = 1;
-            }
-            updateCarousel();
+            slideToImage('next');
         }
 
         function prevImage() {
-            currentImageIndex--;
-            if (currentImageIndex < 1) {
-                currentImageIndex = totalImages;
-            }
-            updateCarousel();
+            slideToImage('prev');
         }
 
-        // Add smooth fade transition to image
-        document.addEventListener('DOMContentLoaded', function() {
-            const image = document.getElementById('carouselImage');
-            if (image) {
-                image.style.transition = 'opacity 0.3s ease';
-            }
-        });
-
-        // Optional: Add keyboard navigation (left/right arrows)
+        // Keyboard navigation
         document.addEventListener('keydown', function(e) {
             if (e.key === 'ArrowLeft') {
                 prevImage();
             } else if (e.key === 'ArrowRight') {
                 nextImage();
+            }
+        });
+
+        // Optional: Touch swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const carouselCard = document.querySelector('.carousel-card');
+
+            if (carouselCard) {
+                carouselCard.addEventListener('touchstart', function(e) {
+                    touchStartX = e.changedTouches[0].screenX;
+                });
+
+                carouselCard.addEventListener('touchend', function(e) {
+                    touchEndX = e.changedTouches[0].screenX;
+                    handleSwipe();
+                });
+
+                function handleSwipe() {
+                    const swipeThreshold = 50;
+                    const diff = touchStartX - touchEndX;
+
+                    if (Math.abs(diff) > swipeThreshold) {
+                        if (diff > 0) {
+                            // Swiped left - show next
+                            nextImage();
+                        } else {
+                            // Swiped right - show previous
+                            prevImage();
+                        }
+                    }
+                }
             }
         });
     </script>
