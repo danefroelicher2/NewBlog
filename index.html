@@ -200,6 +200,17 @@
             display: inline-block;
         }
 
+        /* Extend hover area for better UX */
+        .nav-dropdown-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -20px; /* Extend hover area to the left */
+            right: -20px; /* Extend hover area to the right */
+            bottom: -10px; /* Extend hover area down to cover gap */
+            z-index: -1;
+        }
+
         .discourse-link {
             /* Same styles as .nav-link, already applied */
         }
@@ -210,7 +221,7 @@
             top: 100%;
             left: 50%;
             transform: translateX(-50%);
-            margin-top: 15px;
+            margin-top: 10px; /* REDUCED from 15px to 10px */
             background: var(--parchment-light);
             border: 3px solid var(--border-ornate);
             border-radius: 8px;
@@ -231,6 +242,18 @@
             border-left: 10px solid transparent;
             border-right: 10px solid transparent;
             border-bottom: 10px solid var(--border-ornate);
+        }
+
+        /* ADD INVISIBLE BRIDGE - this is the key fix */
+        .nav-dropdown::after {
+            content: '';
+            position: absolute;
+            bottom: 100%; /* Start from top of dropdown */
+            left: 0;
+            right: 0;
+            height: 10px; /* Same as margin-top to fill the gap */
+            background: transparent;
+            z-index: -1;
         }
 
         .nav-dropdown-wrapper:hover .nav-dropdown {
