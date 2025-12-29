@@ -536,6 +536,15 @@
             color: var(--parchment-light);
         }
 
+        .admin-btn.danger {
+            background: #8b4049;
+            border-color: #6d3239;
+        }
+
+        .admin-btn.danger:hover {
+            background: #a85058;
+        }
+
         /* Section Divider */
         .section-divider {
             text-align: center;
@@ -830,9 +839,13 @@
             return div.innerHTML;
         }
 
+        let currentViewingPost = null;
+
         function viewTale(postId) {
             const post = allPosts.find(p => p.id === postId);
             if (!post) return;
+
+            currentViewingPost = post;
 
             document.getElementById('viewTitle').textContent = post.title;
             document.getElementById('viewMeta').innerHTML = `
@@ -840,11 +853,87 @@
                 ${post.lastModified !== post.created ? `<span>Updated: ${formatDate(post.lastModified)}</span>` : ''}
             `;
             document.getElementById('viewContent').textContent = post.content;
+
+            // Check if user is admin and show edit/delete buttons
+            const session = sessionStorage.getItem('questJournalAdmin');
+            if (session) {
+                document.getElementById('viewAdminActions').style.display = 'block';
+            } else {
+                document.getElementById('viewAdminActions').style.display = 'none';
+            }
+
             document.getElementById('viewModal').classList.add('active');
         }
 
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('active');
+        }
+
+        function editCurrentPost() {
+            if (!currentViewingPost) return;
+            // Redirect to index.html with post ID to edit
+            window.location.href = `index.html#edit-${currentViewingPost.id}`;
+        }
+
+        async function deleteCurrentPost() {
+            if (!currentViewingPost) return;
+
+            if (!confirm(`Are you sure you want to delete "${currentViewingPost.title}"?`)) {
+                return;
+            }
+
+            try {
+                // Load fresh data from GitHub
+                const url = 'https://api.github.com/repos/danefroelicher2/NewBlog/contents/data/posts.json';
+                const cacheBuster = `?t=${Date.now()}`;
+                const response = await fetch(url + cacheBuster);
+                const data = await response.json();
+                const content = atob(data.content);
+                let posts = JSON.parse(content);
+
+                // Remove the post
+                posts = posts.filter(p => p.id !== currentViewingPost.id);
+
+                // Save back to GitHub
+                const session = sessionStorage.getItem('questJournalAdmin');
+                if (!session) {
+                    alert('Not authenticated. Please login.');
+                    return;
+                }
+
+                const sessionData = JSON.parse(session);
+                const token = sessionData.token;
+
+                const updatePayload = {
+                    message: `Delete post "${currentViewingPost.title}" - ${new Date().toISOString()}`,
+                    content: btoa(JSON.stringify(posts, null, 2)),
+                    sha: data.sha,
+                    branch: 'main'
+                };
+
+                const saveResponse = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify(updatePayload)
+                });
+
+                if (!saveResponse.ok) {
+                    throw new Error('Failed to delete post');
+                }
+
+                // Close modal and reload page
+                closeModal('viewModal');
+                alert('Post deleted successfully!');
+                window.location.reload();
+
+            } catch (error) {
+                console.error('Error deleting post:', error);
+                alert('Failed to delete post: ' + error.message);
+            }
         }
 
         // Initialize on page load
@@ -1013,6 +1102,12 @@
             <h2 class="modal-header" id="viewTitle"></h2>
             <div id="viewMeta" class="tale-meta" style="justify-content: center; margin-bottom: 30px;"></div>
             <div id="viewContent" style="font-size: 1.1rem; line-height: 1.9; color: var(--ink-medium); white-space: pre-wrap;"></div>
+            <div id="viewAdminActions" style="margin-top: 30px; display: none;">
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="editCurrentPost()">Edit</button>
+                    <button class="btn admin-btn danger" onclick="deleteCurrentPost()">Delete</button>
+                </div>
+            </div>
         </div>
     </div>
 

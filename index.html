@@ -1645,6 +1645,26 @@
             }
         })();
 
+        // Handle edit hash from category pages (e.g., #edit-123)
+        (function() {
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#edit-')) {
+                const postId = parseInt(hash.replace('#edit-', ''));
+                if (postId && !isNaN(postId)) {
+                    // Wait for posts to load, then open edit modal
+                    setTimeout(() => {
+                        const post = app.posts.find(p => p.id === postId);
+                        if (post && app.isAdmin) {
+                            app.currentViewingPost = post;
+                            app.editTale();
+                            // Clear hash
+                            history.replaceState(null, null, ' ');
+                        }
+                    }, 1000);
+                }
+            }
+        })();
+
         // Mobile dropdown toggle
         (function() {
             const isMobile = window.matchMedia('(max-width: 768px)').matches;
