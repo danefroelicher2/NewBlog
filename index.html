@@ -750,22 +750,188 @@
             color: var(--parchment-light);
         }
 
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 80px 20px;
-            color: var(--ink-medium);
+        /* Hero Section */
+        .hero-section {
+            max-width: 1200px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
         }
 
-        .empty-state-icon {
-            font-size: 4rem;
+        .hero-row {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+            align-items: start;
+        }
+
+        /* Image Carousel */
+        .carousel-container {
+            position: relative;
+        }
+
+        .carousel-card {
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(43,24,16,0.05) 100%),
+                url('textures/parchment.jpg'),
+                var(--parchment-light);
+            background-size: cover;
+            border: 4px solid var(--border-ornate);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow);
+            aspect-ratio: 3/4; /* Portrait orientation for iPhone photos */
+            object-fit: cover;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--parchment-light);
+            border: 2px solid var(--gold-accent);
+            color: var(--ink-dark);
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .carousel-prev {
+            left: 10px;
+        }
+
+        .carousel-next {
+            right: 10px;
+        }
+
+        .carousel-btn:hover {
+            background: var(--gold-accent);
+            color: var(--parchment-light);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--parchment-light);
+            border: 2px solid var(--gold-accent);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            color: var(--ink-dark);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        /* About Me Card */
+        .about-me-card {
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(43,24,16,0.05) 100%),
+                url('textures/parchment.jpg'),
+                var(--parchment-light);
+            background-size: cover;
+            border: 4px solid var(--border-ornate);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+
+        .about-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--ink-dark);
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .about-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: var(--gold-accent);
+        }
+
+        .about-text {
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--ink-medium);
             margin-bottom: 20px;
         }
 
-        .empty-state-text {
-            font-family: var(--font-heading);
-            font-size: 1.5rem;
-            font-style: italic;
+        .about-text:last-child {
+            margin-bottom: 0;
+        }
+
+        /* About the Blog Card */
+        .about-blog-card {
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(43,24,16,0.05) 100%),
+                url('textures/parchment.jpg'),
+                var(--parchment-light);
+            background-size: cover;
+            border: 4px solid var(--border-ornate);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px var(--shadow);
+            margin-bottom: 40px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero-row {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .carousel-card {
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            .about-me-card,
+            .about-blog-card {
+                padding: 30px 25px;
+            }
+
+            .about-title {
+                font-size: 1.6rem;
+            }
+
+            .about-text {
+                font-size: 1rem;
+            }
+
+            .carousel-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.5rem;
+            }
         }
 
         /* Footer */
@@ -903,19 +1069,54 @@
             </nav>
         </header>
 
-        <!-- Pinned Posts Section -->
-        <section id="pinnedSection" class="pinned-section" style="display: none !important;">
-            <h2 class="section-title">Featured Chronicles</h2>
-            <div id="pinnedContainer" class="pinned-grid">
-                <!-- Pinned posts render here -->
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <!-- Carousel and About Me Row -->
+            <div class="hero-row">
+                <!-- Image Carousel -->
+                <div class="carousel-container">
+                    <div class="carousel-card">
+                        <button class="carousel-btn carousel-prev" onclick="prevImage()">←</button>
+                        <img id="carouselImage" src="images/home/photo-1.jpg" alt="Dane's photo" class="carousel-image">
+                        <button class="carousel-btn carousel-next" onclick="nextImage()">→</button>
+                        <div class="carousel-indicator">
+                            <span id="currentSlide">1</span> / 11
+                        </div>
+                    </div>
+                </div>
+
+                <!-- About Me Blurb -->
+                <div class="about-me-card">
+                    <h2 class="about-title">About Me</h2>
+                    <p class="about-text">
+                        Hi, I'm Dane! [Replace this text with your personal introduction.
+                        Talk about who you are, what you're passionate about, your interests,
+                        hobbies, and what drives you. This is your chance to give visitors
+                        a glimpse into your personality and what makes you unique.]
+                    </p>
+                    <p class="about-text">
+                        [Add more paragraphs here as needed. Share your background, current
+                        pursuits, or anything else you'd like people to know about you.]
+                    </p>
+                </div>
+            </div>
+
+            <!-- About the Blog Section -->
+            <div class="about-blog-card">
+                <h2 class="about-title">About Quest Journal</h2>
+                <p class="about-text">
+                    [Replace this text with information about your blog. Explain what Quest
+                    Journal is about, what topics you cover, why you started it, and what
+                    readers can expect to find here. This is your blog's mission statement
+                    and purpose.]
+                </p>
+                <p class="about-text">
+                    [Add more details about the blog structure, categories (Tech, History,
+                    Literature), or your writing philosophy. Help visitors understand what
+                    makes this blog special.]
+                </p>
             </div>
         </section>
-
-        <!-- Empty State -->
-        <div id="emptyState" class="empty-state" style="display: none;">
-            <div class="empty-state-icon">📜</div>
-            <p class="empty-state-text">The journal awaits its first tale...</p>
-        </div>
 
         <!-- Footer -->
         <footer>
@@ -1433,115 +1634,6 @@
                 document.getElementById('viewModal').classList.add('active');
             }
 
-            // === RENDERING ===
-
-            renderTales() {
-                // Skip pinned posts rendering on home page
-                // Render recent posts with pagination
-                this.renderRecentPosts();
-            }
-
-            renderPinnedPosts() {
-                // Pinned section disabled on home page - pinning is for category pages only
-                const pinnedSection = document.getElementById('pinnedSection');
-                if (pinnedSection) {
-                    pinnedSection.style.display = 'none';
-                }
-                return;
-
-                /* OLD CODE - KEEP FOR REFERENCE BUT NEVER RUNS
-                const pinnedPosts = this.posts.filter(p => p.pinnedSlots?.discourse !== null);
-                const pinnedContainer = document.getElementById('pinnedContainer');
-                const pinnedSection = document.getElementById('pinnedSection');
-
-                if (pinnedPosts.length === 0) {
-                    pinnedSection.style.display = 'none';
-                    return;
-                }
-
-                pinnedSection.style.display = 'block';
-                pinnedContainer.innerHTML = pinnedPosts.map(post => {
-                    const preview = post.content.substring(0, 150) + (post.content.length > 150 ? '...' : '');
-                    return `
-                        <div class="pinned-card tale-card">
-                            <h3 class="pinned-title tale-title">${this.escapeHtml(post.title)}</h3>
-                            <div class="tale-meta">
-                                <span>${this.formatDate(post.created)}</span>
-                            </div>
-                            <div class="tale-content">${this.escapeHtml(preview)}</div>
-                            <button class="read-tale-btn" onclick="app.viewTale(${post.id})">
-                                Read the Tale
-                            </button>
-                        </div>
-                    `;
-                }).join('');
-                */
-            }
-
-            renderRecentPosts() {
-                const container = document.getElementById('talesContainer');
-                const emptyState = document.getElementById('emptyState');
-                const loadMoreContainer = document.getElementById('loadMoreContainer');
-
-                // Show ALL posts on home page (pinning doesn't affect home page)
-                const allPosts = this.posts;
-
-                if (allPosts.length === 0) {
-                    container.style.display = 'none';
-                    emptyState.style.display = 'block';
-                    loadMoreContainer.style.display = 'none';
-                    return;
-                }
-
-                container.style.display = 'grid';
-                emptyState.style.display = 'none';
-
-                // Paginate posts
-                const displayPosts = allPosts.slice(0, this.currentPage * this.postsPerPage);
-
-                container.innerHTML = displayPosts.map(post => {
-                    const preview = post.content.substring(0, 200) + (post.content.length > 200 ? '...' : '');
-                    return `
-                        <div class="tale-card">
-                            <h3 class="tale-title">${this.escapeHtml(post.title)}</h3>
-                            <div class="tale-meta">
-                                <span>${this.formatDate(post.created)}</span>
-                            </div>
-                            <div class="tale-content">${this.escapeHtml(preview)}</div>
-                            <button class="read-tale-btn" onclick="app.viewTale(${post.id})">
-                                Read the Tale
-                            </button>
-                        </div>
-                    `;
-                }).join('');
-
-                // Show/hide load more button
-                if (displayPosts.length < allPosts.length) {
-                    loadMoreContainer.style.display = 'block';
-                } else {
-                    loadMoreContainer.style.display = 'none';
-                }
-            }
-
-            loadMorePosts() {
-                this.currentPage++;
-                this.renderRecentPosts();
-                document.getElementById('recentSection').scrollIntoView({ behavior: 'smooth' });
-            }
-
-            showAllTales() {
-                this.renderTales();
-            }
-
-            showHome() {
-                this.renderTales();
-            }
-
-            showDiscourse() {
-                // Placeholder for future discourse/blog categories
-                this.showMessage('Discourse section coming soon!', 'success');
-            }
-
             // === UTILITIES ===
 
             closeModal(modalId) {
@@ -1640,6 +1732,57 @@
                 }
             }
         })();
+
+        // Image Carousel
+        let currentImageIndex = 1;
+        const totalImages = 11;
+
+        function updateCarousel() {
+            const image = document.getElementById('carouselImage');
+            const indicator = document.getElementById('currentSlide');
+
+            image.src = `images/home/photo-${currentImageIndex}.jpg`;
+            indicator.textContent = currentImageIndex;
+
+            // Add fade animation
+            image.style.opacity = '0';
+            setTimeout(() => {
+                image.style.opacity = '1';
+            }, 50);
+        }
+
+        function nextImage() {
+            currentImageIndex++;
+            if (currentImageIndex > totalImages) {
+                currentImageIndex = 1;
+            }
+            updateCarousel();
+        }
+
+        function prevImage() {
+            currentImageIndex--;
+            if (currentImageIndex < 1) {
+                currentImageIndex = totalImages;
+            }
+            updateCarousel();
+        }
+
+        // Add smooth fade transition to image
+        document.addEventListener('DOMContentLoaded', function() {
+            const image = document.getElementById('carouselImage');
+            if (image) {
+                image.style.transition = 'opacity 0.3s ease';
+            }
+        });
+
+        // Optional: Add keyboard navigation (left/right arrows)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                prevImage();
+            } else if (e.key === 'ArrowRight') {
+                nextImage();
+            }
+        });
     </script>
 </body>
 </html>
