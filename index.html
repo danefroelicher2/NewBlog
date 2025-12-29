@@ -86,63 +86,6 @@
             z-index: 1;
         }
 
-        /* Admin Status Indicator */
-        .admin-indicator {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--parchment-light);
-            border: 2px solid var(--gold-accent);
-            border-radius: 8px;
-            padding: 12px 20px;
-            display: none;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 15px var(--shadow);
-            z-index: 5000;
-            font-family: var(--font-heading);
-            font-size: 0.95rem;
-            color: var(--ink-dark);
-            animation: slideInFromRight 0.3s ease;
-        }
-
-        .admin-indicator.active {
-            display: flex;
-        }
-
-        .indicator-dot {
-            width: 10px;
-            height: 10px;
-            background: #6b8b47;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        .indicator-text {
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        @keyframes slideInFromRight {
-            from {
-                transform: translateX(300px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-        }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -1054,12 +997,6 @@
     </style>
 </head>
 <body>
-    <!-- Admin Status Indicator -->
-    <div id="adminIndicator" class="admin-indicator">
-        <span class="indicator-dot"></span>
-        <span class="indicator-text">Admin Mode</span>
-    </div>
-
     <div class="container">
         <!-- Header -->
         <header>
@@ -1307,7 +1244,6 @@
                 this.githubToken = null;
                 sessionStorage.removeItem('questJournalAdmin');
                 document.getElementById('adminPanel').classList.remove('active');
-                document.getElementById('adminIndicator').classList.remove('active');
                 this.showMessage('Logged out - refresh to hide panel', 'success');
                 this.renderTales();
 
@@ -1319,7 +1255,6 @@
 
             showAdminPanel() {
                 document.getElementById('adminPanel').classList.add('active');
-                document.getElementById('adminIndicator').classList.add('active');
                 console.log('✅ Admin panel shown');
             }
 
@@ -1705,9 +1640,8 @@
                 }
 
                 // Show UI elements
-                document.getElementById('adminIndicator').classList.add('active');
                 document.getElementById('adminPanel').classList.add('active');
-                console.log('✅ Admin mode and Scribe\'s Desk shown on page load');
+                console.log('✅ Scribe\'s Desk shown on page load');
             }
         })();
 
