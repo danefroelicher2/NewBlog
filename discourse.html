@@ -950,9 +950,15 @@
                 const sessionData = JSON.parse(session);
                 const token = sessionData.token;
 
+                // Proper UTF-8 to Base64 conversion
+                const deleteJsonString = JSON.stringify(posts, null, 2);
+                const deleteUtf8Bytes = new TextEncoder().encode(deleteJsonString);
+                const deleteBinaryString = Array.from(deleteUtf8Bytes, byte => String.fromCharCode(byte)).join('');
+                const deleteEncodedContent = btoa(deleteBinaryString);
+
                 const updatePayload = {
                     message: `Delete post "${currentViewingPost.title}" - ${new Date().toISOString()}`,
-                    content: btoa(JSON.stringify(posts, null, 2)),
+                    content: deleteEncodedContent,
                     sha: data.sha,
                     branch: 'main'
                 };
