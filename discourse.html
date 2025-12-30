@@ -1049,9 +1049,9 @@
                 // Save to GitHub
                 // Proper UTF-8 to Base64 conversion
                 const jsonString = JSON.stringify(posts, null, 2);
-                const utf8Bytes = new TextEncoder().encode(jsonString);
-                const binaryString = Array.from(utf8Bytes, byte => String.fromCharCode(byte)).join('');
-                const encodedContent = btoa(binaryString);
+                const encodeUtf8Bytes = new TextEncoder().encode(jsonString);
+                const encodeBinaryString = Array.from(encodeUtf8Bytes, byte => String.fromCharCode(byte)).join('');
+                const encodedContent = btoa(encodeBinaryString);
 
                 const updatePayload = {
                     message: `Pin post to discourse slot ${slotNumber} - ${new Date().toISOString()}`,
