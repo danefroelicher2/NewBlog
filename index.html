@@ -1271,9 +1271,9 @@
                         return;
                     }
 
-                    const data = await response.json();
-                    const content = atob(data.content);
-                    this.posts = JSON.parse(content);
+                   const data = await response.json();
+        const content = decodeURIComponent(escape(atob(data.content)));  
+        this.posts = JSON.parse(content);
                     console.log(`Loaded ${this.posts.length} tales from GitHub`);
                     
                     localStorage.setItem('questJournalPosts', JSON.stringify(this.posts));
