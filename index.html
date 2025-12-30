@@ -1272,7 +1272,11 @@
                     }
 
                    const data = await response.json();
-const content = atob(data.content);        this.posts = JSON.parse(content);
+// Proper Base64 to UTF-8 conversion
+const binaryString = atob(data.content);
+const utf8Bytes = Uint8Array.from(binaryString, char => char.charCodeAt(0));
+const content = new TextDecoder().decode(utf8Bytes);
+  this.posts = JSON.parse(content);
                     console.log(`Loaded ${this.posts.length} tales from GitHub`);
                     
                     localStorage.setItem('questJournalPosts', JSON.stringify(this.posts));
@@ -1327,7 +1331,12 @@ const content = atob(data.content);        this.posts = JSON.parse(content);
 
                     // Prepare content
 
-const content = btoa(JSON.stringify(this.posts, null, 2));const payload = {
+// Proper UTF-8 to Base64 conversion
+const jsonString = JSON.stringify(this.posts, null, 2);
+const utf8Bytes = new TextEncoder().encode(jsonString);
+const binaryString = Array.from(utf8Bytes, byte => String.fromCharCode(byte)).join('');
+const content = btoa(binaryString);
+const payload = {
                         message: `Update blog posts - ${new Date().toISOString()}`,
                         content: content,
                         branch: this.githubBranch
