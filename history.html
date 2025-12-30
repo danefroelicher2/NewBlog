@@ -710,7 +710,11 @@
                 }
 
                 const data = await response.json();
-                const content = atob(data.content);
+                // Proper Base64 to UTF-8 conversion - clean whitespace first!
+                const cleanBase64 = data.content.replace(/\s/g, '');
+                const binaryString = atob(cleanBase64);
+                const utf8Bytes = Uint8Array.from(binaryString, char => char.charCodeAt(0));
+                const content = new TextDecoder().decode(utf8Bytes);
                 allPosts = JSON.parse(content);
                 console.log(`Loaded ${allPosts.length} posts from GitHub`);
 
@@ -879,7 +883,11 @@
                 const cacheBuster = `?t=${Date.now()}`;
                 const response = await fetch(url + cacheBuster);
                 const data = await response.json();
-                const content = atob(data.content);
+                // Proper Base64 to UTF-8 conversion - clean whitespace first!
+                const cleanBase64 = data.content.replace(/\s/g, '');
+                const binaryString = atob(cleanBase64);
+                const utf8Bytes = Uint8Array.from(binaryString, char => char.charCodeAt(0));
+                const content = new TextDecoder().decode(utf8Bytes);
                 let posts = JSON.parse(content);
 
                 // Remove the post
@@ -969,7 +977,11 @@
                 const cacheBuster = `?t=${Date.now()}`;
                 const response = await fetch(url + cacheBuster);
                 const data = await response.json();
-                const content = atob(data.content);
+                // Proper Base64 to UTF-8 conversion - clean whitespace first!
+                const cleanBase64 = data.content.replace(/\s/g, '');
+                const binaryString = atob(cleanBase64);
+                const utf8Bytes = Uint8Array.from(binaryString, char => char.charCodeAt(0));
+                const content = new TextDecoder().decode(utf8Bytes);
                 let posts = JSON.parse(content);
 
                 const postToPin = posts.find(p => p.id === postId);

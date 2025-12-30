@@ -591,15 +591,14 @@
             margin-bottom: 60px;
         }
 
-        /* Pinned Grid - 6 columns (LCM of 2 and 3) */
         .pinned-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
             gap: 30px;
             margin-bottom: 40px;
         }
 
-        /* Base pinned card styles */
+        /* Ensure all pinned cards have the same base size */
         .pinned-card {
             background:
                 linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 50%, rgba(43, 24, 16, 0.05) 100%),
@@ -612,6 +611,7 @@
             box-shadow: 0 10px 25px var(--shadow);
             position: relative;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%; /* Card fills its grid cell */
         }
 
         .pinned-card:hover {
@@ -619,19 +619,17 @@
             box-shadow: 0 15px 35px var(--shadow);
         }
 
-        /* Slots 1 & 2: Large cards spanning 3 columns each (top row, 2 cards) */
-        .pinned-card[data-slot="1"],
-        .pinned-card[data-slot="2"] {
-            grid-column: span 3;
-            padding: 50px;
+        /* Mobile responsiveness */
+        @media (max-width: 1024px) {
+            .pinned-grid {
+                grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
+            }
         }
 
-        /* Slots 3, 4, 5: Regular cards spanning 2 columns each (bottom row, 3 cards) */
-        .pinned-card[data-slot="3"],
-        .pinned-card[data-slot="4"],
-        .pinned-card[data-slot="5"] {
-            grid-column: span 2;
-            padding: 40px;
+        @media (max-width: 768px) {
+            .pinned-grid {
+                grid-template-columns: 1fr; /* Single column on mobile */
+            }
         }
 
         .slot-badge {
@@ -752,7 +750,11 @@
                 }
 
                 const data = await response.json();
-                const content = atob(data.content);
+                // Proper Base64 to UTF-8 conversion - clean whitespace first!
+                const cleanBase64 = data.content.replace(/\s/g, '');
+                const binaryString = atob(cleanBase64);
+                const utf8Bytes = Uint8Array.from(binaryString, char => char.charCodeAt(0));
+                const content = new TextDecoder().decode(utf8Bytes);
                 allPosts = JSON.parse(content);
                 console.log(`Loaded ${allPosts.length} posts from GitHub`);
 
@@ -928,7 +930,11 @@
                 const cacheBuster = `?t=${Date.now()}`;
                 const response = await fetch(url + cacheBuster);
                 const data = await response.json();
-                const content = atob(data.content);
+                // Proper Base64 to UTF-8 conversion - clean whitespace first!
+                const cleanBase64 = data.content.replace(/\s/g, '');
+                const binaryString = atob(cleanBase64);
+                const utf8Bytes = Uint8Array.from(binaryString, char => char.charCodeAt(0));
+                const content = new TextDecoder().decode(utf8Bytes);
                 let posts = JSON.parse(content);
 
                 // Remove the post
@@ -1016,7 +1022,11 @@
                 const cacheBuster = `?t=${Date.now()}`;
                 const response = await fetch(url + cacheBuster);
                 const data = await response.json();
-                const content = atob(data.content);
+                // Proper Base64 to UTF-8 conversion - clean whitespace first!
+                const cleanBase64 = data.content.replace(/\s/g, '');
+                const binaryString = atob(cleanBase64);
+                const utf8Bytes = Uint8Array.from(binaryString, char => char.charCodeAt(0));
+                const content = new TextDecoder().decode(utf8Bytes);
                 let posts = JSON.parse(content);
 
                 // Find the post to pin

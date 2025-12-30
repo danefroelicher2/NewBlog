@@ -1271,13 +1271,13 @@
                         return;
                     }
 
-                  const data = await response.json();
-// Proper Base64 to UTF-8 conversion - REMOVE whitespace first!
+                 const data = await response.json();
+// Proper Base64 to UTF-8 conversion - clean whitespace first!
 const cleanBase64 = data.content.replace(/\s/g, '');
 const binaryString = atob(cleanBase64);
 const utf8Bytes = Uint8Array.from(binaryString, char => char.charCodeAt(0));
 const content = new TextDecoder().decode(utf8Bytes);
-  this.posts = JSON.parse(content);
+this.posts = JSON.parse(content);
                     console.log(`Loaded ${this.posts.length} tales from GitHub`);
                     
                     localStorage.setItem('questJournalPosts', JSON.stringify(this.posts));
