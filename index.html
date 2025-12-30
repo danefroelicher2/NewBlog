@@ -1272,7 +1272,7 @@
                     }
 
                    const data = await response.json();
-// Proper Base64 to UTF-8 conversion
+// Proper Base64 to UTF-8 conversionn
 const binaryString = atob(data.content);
 const utf8Bytes = Uint8Array.from(binaryString, char => char.charCodeAt(0));
 const content = new TextDecoder().decode(utf8Bytes);
