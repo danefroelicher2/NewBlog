@@ -2,10 +2,10 @@
   {
     "id": 1767124395337,
     "title": "gege",
-    "content": "fedf-----",
+    "content": "fedf-----ddddddddd",
     "category": "tech",
     "created": "2025-12-30T19:53:15.337Z",
-    "lastModified": "2025-12-30T19:53:15.337Z",
+    "lastModified": "2025-12-30T20:14:17.408Z",
     "pinnedSlots": {
       "discourse": null,
       "tech": null,
@@ -35,7 +35,7 @@
     "created": "2025-12-30T18:17:53.789Z",
     "lastModified": "2025-12-30T18:17:53.789Z",
     "pinnedSlots": {
-      "discourse": null,
+      "discourse": 1,
       "tech": null,
       "history": null,
       "literature": 4
