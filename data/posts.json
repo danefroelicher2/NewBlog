@@ -79,7 +79,7 @@
     "pinnedSlots": {
       "discourse": null,
       "tech": null,
-      "history": null,
+      "history": 2,
       "literature": null
     }
   },
