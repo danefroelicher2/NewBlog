@@ -1083,6 +1083,7 @@
         <h3 class="admin-title">🖋️ Scribe's Desk</h3>
         <button class="admin-btn" onclick="app.createNewTale()">Pen a New Tale</button>
         <button class="admin-btn" onclick="app.viewDrafts()">View Drafts</button>
+        <button class="admin-btn" onclick="app.recoverPosts()" style="background: #d97706; border-color: #b45309;">🚨 RECOVER POSTS</button>
         <button class="admin-btn danger" onclick="app.logout()">Logout</button>
     </div>
 
@@ -1381,6 +1382,69 @@ const payload = {
                     // Fallback to localStorage
                     localStorage.setItem('questJournalPosts', JSON.stringify(this.posts));
                     this.showMessage(`⚠️ GitHub sync failed: ${error.message}. Saved locally.`, 'error');
+                }
+            }
+
+            // === RECOVERY FUNCTIONS ===
+
+            async recoverFromGitHub(commitSha) {
+                try {
+                    // Fetch specific commit version
+                    const url = `https://api.github.com/repos/${this.githubRepo}/contents/${this.postsFile}?ref=${commitSha}`;
+                    const response = await fetch(url, {
+                        headers: {
+                            'Authorization': `token ${this.githubToken}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+
+                    if (!response.ok) throw new Error('Failed to fetch old version');
+
+                    const data = await response.json();
+
+                    // Decode with proper UTF-8
+                    const cleanBase64 = data.content.replace(/\s/g, '');
+                    const binaryString = atob(cleanBase64);
+                    const utf8Bytes = Uint8Array.from(binaryString, char => char.charCodeAt(0));
+                    const content = new TextDecoder().decode(utf8Bytes);
+                    const recoveredPosts = JSON.parse(content);
+
+                    console.log(`✅ Recovered ${recoveredPosts.length} posts!`);
+                    console.log('Posts:', recoveredPosts.map(p => p.title));
+
+                    // Save recovered posts
+                    this.posts = recoveredPosts;
+                    await this.savePostsToGitHub();
+                    this.renderTales();
+
+                    this.showMessage(`✅ Recovered ${recoveredPosts.length} posts!`, 'success');
+                } catch (error) {
+                    console.error('Recovery failed:', error);
+                    this.showMessage(`Recovery failed: ${error.message}`, 'error');
+                }
+            }
+
+            recoverFromLocalStorage() {
+                const backup = localStorage.getItem('questJournalPosts');
+                if (backup) {
+                    this.posts = JSON.parse(backup);
+                    this.savePostsToGitHub();
+                    this.renderTales();
+                    this.showMessage(`Recovered ${this.posts.length} posts from local backup!`, 'success');
+                } else {
+                    this.showMessage('No local backup found', 'error');
+                }
+            }
+
+            recoverPosts() {
+                const choice = confirm('Try localStorage recovery first? (OK = Yes, Cancel = Use GitHub commit)');
+                if (choice) {
+                    this.recoverFromLocalStorage();
+                } else {
+                    const sha = prompt('Enter the commit SHA from GitHub (check commits before the pin fix):');
+                    if (sha) {
+                        this.recoverFromGitHub(sha);
+                    }
                 }
             }
 
