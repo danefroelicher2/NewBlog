@@ -1022,9 +1022,15 @@
                 postToPin.pinnedSlots.tech = slotNumber;
 
                 // Save to GitHub
+                // Proper UTF-8 to Base64 conversion
+                const jsonString = JSON.stringify(posts, null, 2);
+                const utf8Bytes = new TextEncoder().encode(jsonString);
+                const binaryString = Array.from(utf8Bytes, byte => String.fromCharCode(byte)).join('');
+                const encodedContent = btoa(binaryString);
+
                 const updatePayload = {
                     message: `Pin post to tech slot ${slotNumber} - ${new Date().toISOString()}`,
-                    content: btoa(JSON.stringify(posts, null, 2)),
+                    content: encodedContent,
                     sha: data.sha,
                     branch: 'main'
                 };
