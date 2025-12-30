@@ -1327,8 +1327,9 @@
                     }
 
                     // Prepare content
-                    const content = btoa(JSON.stringify(this.posts, null, 2));
-                    const payload = {
+// UTF-8 safe Base64 encoding
+const content = btoa(unescape(encodeURIComponent(JSON.stringify(this.posts, null, 2))));                    
+const payload = {
                         message: `Update blog posts - ${new Date().toISOString()}`,
                         content: content,
                         branch: this.githubBranch
