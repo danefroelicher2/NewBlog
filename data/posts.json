@@ -26,19 +26,5 @@
       "history": null,
       "literature": null
     }
-  },
-  {
-    "id": 1767037945031,
-    "title": "test",
-    "content": "test",
-    "category": "tech",
-    "created": "2025-12-29T19:52:25.031Z",
-    "lastModified": "2025-12-29T19:52:25.031Z",
-    "pinnedSlots": {
-      "discourse": 1,
-      "tech": 5,
-      "history": null,
-      "literature": null
-    }
   }
 ]
