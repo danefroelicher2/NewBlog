@@ -1272,8 +1272,7 @@
                     }
 
                    const data = await response.json();
-        const content = decodeURIComponent(escape(atob(data.content)));  
-        this.posts = JSON.parse(content);
+const content = atob(data.content);        this.posts = JSON.parse(content);
                     console.log(`Loaded ${this.posts.length} tales from GitHub`);
                     
                     localStorage.setItem('questJournalPosts', JSON.stringify(this.posts));
@@ -1328,8 +1327,7 @@
 
                     // Prepare content
 
-const content = btoa(unescape(encodeURIComponent(JSON.stringify(this.posts, null, 2))));                 
-const payload = {
+const content = btoa(JSON.stringify(this.posts, null, 2));const payload = {
                         message: `Update blog posts - ${new Date().toISOString()}`,
                         content: content,
                         branch: this.githubBranch
