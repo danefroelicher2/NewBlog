@@ -129,61 +129,131 @@
             font-size: 1.5rem;
         }
 
-        /* Subheader Navigation */
-        .sub-nav {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 25px;
-            max-width: 900px;
-            margin: 0 auto 50px;
-            flex-wrap: wrap;
+        /* Dropdown Navigation */
+        .nav-dropdown-wrapper {
+            position: relative;
+            display: inline-block;
         }
 
-        .sub-link {
-            font-family: var(--font-heading);
-            font-size: 1.2rem;
-            color: var(--ink-dark);
-            text-decoration: none;
-            padding: 20px 35px;
-            background:
-                linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 50%, rgba(43, 24, 16, 0.05) 100%),
-                url('textures/parchment.jpg'),
-                var(--parchment-light);
-            background-size: cover;
+        /* Extend hover area for better UX */
+        .nav-dropdown-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -20px; /* Extend hover area to the left */
+            right: -20px; /* Extend hover area to the right */
+            bottom: -10px; /* Extend hover area down to cover gap */
+            z-index: -1;
+        }
+
+        .discourse-link {
+            /* Same styles as .nav-link, already applied */
+        }
+
+        .nav-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 10px;
+            background: var(--parchment-light);
             border: 3px solid var(--border-ornate);
             border-radius: 8px;
-            box-shadow: 0 5px 15px var(--shadow);
+            box-shadow: 0 8px 25px var(--shadow);
+            padding: 8px 0; /* REDUCED from 15px to 8px */
+            min-width: 180px;
+            z-index: 1000;
+        }
+
+        .nav-dropdown::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid var(--border-ornate);
+        }
+
+        /* ADD INVISIBLE BRIDGE - this is the key fix */
+        .nav-dropdown::after {
+            content: '';
+            position: absolute;
+            bottom: 100%; /* Start from top of dropdown */
+            left: 0;
+            right: 0;
+            height: 10px; /* Same as margin-top to fill the gap */
+            background: transparent;
+            z-index: -1;
+        }
+
+        .nav-dropdown-wrapper:hover .nav-dropdown {
+            display: block;
+        }
+
+        .dropdown-item {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            color: var(--ink-dark);
+            text-decoration: none;
+            padding: 10px 30px; /* REDUCED from 12px to 10px vertical padding */
+            display: block;
             transition: all 0.3s ease;
-            position: relative;
             letter-spacing: 1px;
         }
 
-        .sub-link::before {
-            content: '✦';
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.3rem;
-            color: var(--gold-accent);
-            background: var(--parchment-light);
-            padding: 0 10px;
-        }
-
-        .sub-link:hover {
-            background:
-                linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%, rgba(43, 24, 16, 0.08) 100%),
-                url('textures/parchment.jpg'),
-                var(--gold-accent);
-            background-size: cover;
+        .dropdown-item:hover {
+            background: var(--gold-accent);
             color: var(--parchment-light);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px var(--shadow);
         }
 
-        .sub-separator {
-            display: none;
+        /* Subtle highlight when on discourse sub-pages */
+        .discourse-link.active-section {
+            color: var(--gold-accent);
+            position: relative;
+        }
+
+        .discourse-link.active-section::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: var(--gold-accent);
+            opacity: 0.6;
+        }
+
+        /* Mobile Dropdown Behavior */
+        @media (max-width: 768px) {
+            .nav-dropdown-wrapper:hover .nav-dropdown {
+                display: none; /* Disable hover on mobile */
+            }
+
+            .nav-dropdown-wrapper.mobile-open .nav-dropdown {
+                display: block;
+            }
+
+            .discourse-link {
+                pointer-events: none; /* Prevent navigation on mobile */
+            }
+
+            /* Add "Discourse Home" option for mobile */
+            .nav-dropdown::before {
+                content: '';
+            }
+
+            .dropdown-mobile-home {
+                display: block !important;
+            }
+        }
+
+        .dropdown-mobile-home {
+            display: none; /* Hidden on desktop */
         }
 
         .section-title {
@@ -333,67 +403,6 @@
         @media (max-width: 768px) {
             .tales-grid {
                 grid-template-columns: 1fr;
-            }
-        }
-
-        /* Admin Status Indicator */
-        .admin-indicator {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--parchment-light);
-            border: 2px solid var(--gold-accent);
-            border-radius: 8px;
-            padding: 12px 20px;
-            display: none;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 15px var(--shadow);
-            z-index: 5000;
-            font-family: var(--font-heading);
-            font-size: 0.95rem;
-            color: var(--ink-dark);
-            animation: slideInFromRight 0.3s ease;
-        }
-
-        .admin-indicator.active {
-            display: flex;
-        }
-
-        .indicator-dot {
-            width: 10px;
-            height: 10px;
-            background: #6b8b47;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        .indicator-text {
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        @keyframes slideInFromRight {
-            from {
-                transform: translateX(300px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.5;
             }
         }
 
@@ -568,20 +577,28 @@
             color: var(--parchment-light);
         }
 
+        .admin-btn.danger {
+            background: #8b4049;
+            border-color: #6d3239;
+        }
+
+        .admin-btn.danger:hover {
+            background: #a85058;
+        }
+
         /* Pinned Posts Section */
         .pinned-section {
             margin-bottom: 60px;
         }
 
-        /* Pinned Grid - 6 columns (LCM of 2 and 3) */
         .pinned-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
             gap: 30px;
             margin-bottom: 40px;
         }
 
-        /* Base pinned card styles */
+        /* Ensure all pinned cards have the same base size */
         .pinned-card {
             background:
                 linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 50%, rgba(43, 24, 16, 0.05) 100%),
@@ -594,6 +611,7 @@
             box-shadow: 0 10px 25px var(--shadow);
             position: relative;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%; /* Card fills its grid cell */
         }
 
         .pinned-card:hover {
@@ -601,19 +619,17 @@
             box-shadow: 0 15px 35px var(--shadow);
         }
 
-        /* Slots 1 & 2: Large cards spanning 3 columns each (top row, 2 cards) */
-        .pinned-card[data-slot="1"],
-        .pinned-card[data-slot="2"] {
-            grid-column: span 3;
-            padding: 50px;
+        /* Mobile responsiveness */
+        @media (max-width: 1024px) {
+            .pinned-grid {
+                grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
+            }
         }
 
-        /* Slots 3, 4, 5: Regular cards spanning 2 columns each (bottom row, 3 cards) */
-        .pinned-card[data-slot="3"],
-        .pinned-card[data-slot="4"],
-        .pinned-card[data-slot="5"] {
-            grid-column: span 2;
-            padding: 40px;
+        @media (max-width: 768px) {
+            .pinned-grid {
+                grid-template-columns: 1fr; /* Single column on mobile */
+            }
         }
 
         .slot-badge {
@@ -671,34 +687,26 @@
 </head>
 
 <body>
-    <!-- Admin Status Indicator -->
-    <div id="adminIndicator" class="admin-indicator">
-        <span class="indicator-dot"></span>
-        <span class="indicator-text">Admin Mode</span>
-    </div>
-
     <div class="container">
         <!-- Header -->
         <header>
             <nav class="main-nav">
                 <a href="index.html" class="nav-link">Home</a>
                 <span class="nav-separator">·</span>
-                <a href="discourse.html" class="nav-link">Discourse</a>
+                <div class="nav-dropdown-wrapper">
+                    <a href="discourse.html" class="nav-link discourse-link">Discourse</a>
+                    <div class="nav-dropdown">
+                        <a href="tech.html" class="dropdown-item">Tech</a>
+                        <a href="history.html" class="dropdown-item">History</a>
+                        <a href="literature.html" class="dropdown-item">Literature</a>
+                    </div>
+                </div>
             </nav>
         </header>
 
-        <!-- Subheader Navigation -->
-        <nav class="sub-nav">
-            <a href="tech.html" class="sub-link">Tech</a>
-            <span class="sub-separator">|</span>
-            <a href="history.html" class="sub-link">History</a>
-            <span class="sub-separator">|</span>
-            <a href="literature.html" class="sub-link">Literature</a>
-        </nav>
-
         <!-- Pinned Posts Section -->
         <section id="pinnedSection" class="pinned-section" style="display: none;">
-            <h2 class="section-title">Featured Chronicles</h2>
+            <h2 class="section-title">Featured Posts</h2>
             <div id="pinnedContainer" class="pinned-grid"></div>
         </section>
 
@@ -742,7 +750,11 @@
                 }
 
                 const data = await response.json();
-                const content = atob(data.content);
+                // Proper Base64 to UTF-8 conversion - clean whitespace first!
+                const cleanBase64 = data.content.replace(/\s/g, '');
+                const binaryString = atob(cleanBase64);
+                const utf8Bytes = Uint8Array.from(binaryString, char => char.charCodeAt(0));
+                const content = new TextDecoder().decode(utf8Bytes);
                 allPosts = JSON.parse(content);
                 console.log(`Loaded ${allPosts.length} posts from GitHub`);
 
@@ -869,9 +881,13 @@
             return str.charAt(0).toUpperCase() + str.slice(1);
         }
 
+        let currentViewingPost = null;
+
         function viewTale(postId) {
             const post = allPosts.find(p => p.id === postId);
             if (!post) return;
+
+            currentViewingPost = post;
 
             document.getElementById('viewTitle').textContent = post.title;
             document.getElementById('viewMeta').innerHTML = `
@@ -879,11 +895,97 @@
                 ${post.lastModified !== post.created ? `<span>Updated: ${formatDate(post.lastModified)}</span>` : ''}
             `;
             document.getElementById('viewContent').textContent = post.content;
+
+            // Check if user is admin and show edit/delete buttons
+            const session = sessionStorage.getItem('questJournalAdmin');
+            if (session) {
+                document.getElementById('viewAdminActions').style.display = 'block';
+            } else {
+                document.getElementById('viewAdminActions').style.display = 'none';
+            }
+
             document.getElementById('viewModal').classList.add('active');
         }
 
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('active');
+        }
+
+        function editCurrentPost() {
+            if (!currentViewingPost) return;
+            // Redirect to index.html with post ID to edit
+            window.location.href = `index.html#edit-${currentViewingPost.id}`;
+        }
+
+        async function deleteCurrentPost() {
+            if (!currentViewingPost) return;
+
+            if (!confirm(`Are you sure you want to delete "${currentViewingPost.title}"?`)) {
+                return;
+            }
+
+            try {
+                // Load fresh data from GitHub
+                const url = 'https://api.github.com/repos/danefroelicher2/NewBlog/contents/data/posts.json';
+                const cacheBuster = `?t=${Date.now()}`;
+                const response = await fetch(url + cacheBuster);
+                const data = await response.json();
+                // Proper Base64 to UTF-8 conversion - clean whitespace first!
+                const cleanBase64 = data.content.replace(/\s/g, '');
+                const binaryString = atob(cleanBase64);
+                const utf8Bytes = Uint8Array.from(binaryString, char => char.charCodeAt(0));
+                const content = new TextDecoder().decode(utf8Bytes);
+                let posts = JSON.parse(content);
+
+                // Remove the post
+                posts = posts.filter(p => p.id !== currentViewingPost.id);
+
+                // Save back to GitHub
+                const session = sessionStorage.getItem('questJournalAdmin');
+                if (!session) {
+                    alert('Not authenticated. Please login.');
+                    return;
+                }
+
+                const sessionData = JSON.parse(session);
+                const token = sessionData.token;
+
+                // Proper UTF-8 to Base64 conversion
+                const deleteJsonString = JSON.stringify(posts, null, 2);
+                const deleteUtf8Bytes = new TextEncoder().encode(deleteJsonString);
+                const deleteBinaryString = Array.from(deleteUtf8Bytes, byte => String.fromCharCode(byte)).join('');
+                const deleteEncodedContent = btoa(deleteBinaryString);
+
+                const updatePayload = {
+                    message: `Delete post "${currentViewingPost.title}" - ${new Date().toISOString()}`,
+                    content: deleteEncodedContent,
+                    sha: data.sha,
+                    branch: 'main'
+                };
+
+                const saveResponse = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify(updatePayload)
+                });
+
+                if (!saveResponse.ok) {
+                    throw new Error('Failed to delete post');
+                }
+
+                // Close modal and reload page
+                closeModal('viewModal');
+                alert('Post deleted successfully!');
+                window.location.reload();
+
+            } catch (error) {
+                console.error('Error deleting post:', error);
+                alert('Failed to delete post: ' + error.message);
+            }
         }
 
         // Pin management variables
@@ -926,7 +1028,11 @@
                 const cacheBuster = `?t=${Date.now()}`;
                 const response = await fetch(url + cacheBuster);
                 const data = await response.json();
-                const content = atob(data.content);
+                // Proper Base64 to UTF-8 conversion - clean whitespace first!
+                const cleanBase64 = data.content.replace(/\s/g, '');
+                const binaryString = atob(cleanBase64);
+                const utf8Bytes = Uint8Array.from(binaryString, char => char.charCodeAt(0));
+                const content = new TextDecoder().decode(utf8Bytes);
                 let posts = JSON.parse(content);
 
                 // Find the post to pin
@@ -947,9 +1053,15 @@
                 postToPin.pinnedSlots.discourse = slotNumber;
 
                 // Save to GitHub
+                // Proper UTF-8 to Base64 conversion
+                const jsonString = JSON.stringify(posts, null, 2);
+                const encodeUtf8Bytes = new TextEncoder().encode(jsonString);
+                const encodeBinaryString = Array.from(encodeUtf8Bytes, byte => String.fromCharCode(byte)).join('');
+                const encodedContent = btoa(encodeBinaryString);
+
                 const updatePayload = {
                     message: `Pin post to discourse slot ${slotNumber} - ${new Date().toISOString()}`,
-                    content: btoa(JSON.stringify(posts, null, 2)),
+                    content: encodedContent,
                     sha: data.sha,
                     branch: 'main'
                 };
@@ -997,17 +1109,38 @@
             renderPosts();
         })();
 
-        // Check admin session and show indicator
-        function checkAdminIndicator() {
-            const session = sessionStorage.getItem('questJournalAdmin');
-            if (session) {
-                document.getElementById('adminIndicator').classList.add('active');
-                console.log('✅ Admin indicator shown');
-            }
-        }
+        // Mobile dropdown toggle
+        (function() {
+            const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-        // Run on page load
-        checkAdminIndicator();
+            if (isMobile) {
+                const dropdownWrapper = document.querySelector('.nav-dropdown-wrapper');
+                const discourseLink = document.querySelector('.discourse-link');
+
+                if (dropdownWrapper) {
+                    // Add mobile-specific "Discourse Home" option
+                    const dropdown = dropdownWrapper.querySelector('.nav-dropdown');
+                    const homeOption = document.createElement('a');
+                    homeOption.href = 'discourse.html';
+                    homeOption.className = 'dropdown-item dropdown-mobile-home';
+                    homeOption.textContent = 'Discourse Home';
+                    dropdown.insertBefore(homeOption, dropdown.firstChild);
+
+                    // Toggle dropdown on click
+                    discourseLink.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        dropdownWrapper.classList.toggle('mobile-open');
+                    });
+
+                    // Close dropdown when clicking outside
+                    document.addEventListener('click', function(e) {
+                        if (!dropdownWrapper.contains(e.target)) {
+                            dropdownWrapper.classList.remove('mobile-open');
+                        }
+                    });
+                }
+            }
+        })();
     </script>
 
     <!-- View Tale Modal -->
@@ -1018,6 +1151,12 @@
             <div id="viewMeta" class="tale-meta" style="justify-content: center; margin-bottom: 30px;"></div>
             <div id="viewContent"
                 style="font-size: 1.1rem; line-height: 1.9; color: var(--ink-medium); white-space: pre-wrap;"></div>
+            <div id="viewAdminActions" style="margin-top: 30px; display: none;">
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="editCurrentPost()">Edit</button>
+                    <button class="btn admin-btn danger" onclick="deleteCurrentPost()">Delete</button>
+                </div>
+            </div>
         </div>
     </div>
 

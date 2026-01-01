@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Quest Journal - A Chronicle of Learning</title>
+    <title>Dane's Blog</title>
     
     <!-- Google Fonts - Medieval/Classic Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -86,63 +86,6 @@
             z-index: 1;
         }
 
-        /* Admin Status Indicator */
-        .admin-indicator {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--parchment-light);
-            border: 2px solid var(--gold-accent);
-            border-radius: 8px;
-            padding: 12px 20px;
-            display: none;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 15px var(--shadow);
-            z-index: 5000;
-            font-family: var(--font-heading);
-            font-size: 0.95rem;
-            color: var(--ink-dark);
-            animation: slideInFromRight 0.3s ease;
-        }
-
-        .admin-indicator.active {
-            display: flex;
-        }
-
-        .indicator-dot {
-            width: 10px;
-            height: 10px;
-            background: #6b8b47;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        .indicator-text {
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        @keyframes slideInFromRight {
-            from {
-                transform: translateX(300px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-        }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -192,6 +135,133 @@
         .nav-separator {
             color: var(--ink-light);
             font-size: 1.5rem;
+        }
+
+        /* Dropdown Navigation */
+        .nav-dropdown-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Extend hover area for better UX */
+        .nav-dropdown-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -20px; /* Extend hover area to the left */
+            right: -20px; /* Extend hover area to the right */
+            bottom: -10px; /* Extend hover area down to cover gap */
+            z-index: -1;
+        }
+
+        .discourse-link {
+            /* Same styles as .nav-link, already applied */
+        }
+
+        .nav-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 10px;
+            background: var(--parchment-light);
+            border: 3px solid var(--border-ornate);
+            border-radius: 8px;
+            box-shadow: 0 8px 25px var(--shadow);
+            padding: 8px 0; /* REDUCED from 15px to 8px */
+            min-width: 180px;
+            z-index: 1000;
+        }
+
+        .nav-dropdown::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid var(--border-ornate);
+        }
+
+        /* ADD INVISIBLE BRIDGE - this is the key fix */
+        .nav-dropdown::after {
+            content: '';
+            position: absolute;
+            bottom: 100%; /* Start from top of dropdown */
+            left: 0;
+            right: 0;
+            height: 10px; /* Same as margin-top to fill the gap */
+            background: transparent;
+            z-index: -1;
+        }
+
+        .nav-dropdown-wrapper:hover .nav-dropdown {
+            display: block;
+        }
+
+        .dropdown-item {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            color: var(--ink-dark);
+            text-decoration: none;
+            padding: 10px 30px; /* REDUCED from 12px to 10px vertical padding */
+            display: block;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        .dropdown-item:hover {
+            background: var(--gold-accent);
+            color: var(--parchment-light);
+        }
+
+        /* Subtle highlight when on discourse sub-pages */
+        .discourse-link.active-section {
+            color: var(--gold-accent);
+            position: relative;
+        }
+
+        .discourse-link.active-section::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: var(--gold-accent);
+            opacity: 0.6;
+        }
+
+        /* Mobile Dropdown Behavior */
+        @media (max-width: 768px) {
+            .nav-dropdown-wrapper:hover .nav-dropdown {
+                display: none; /* Disable hover on mobile */
+            }
+
+            .nav-dropdown-wrapper.mobile-open .nav-dropdown {
+                display: block;
+            }
+
+            .discourse-link {
+                pointer-events: none; /* Prevent navigation on mobile */
+            }
+
+            /* Add "Discourse Home" option for mobile */
+            .nav-dropdown::before {
+                content: '';
+            }
+
+            .dropdown-mobile-home {
+                display: block !important;
+            }
+        }
+
+        .dropdown-mobile-home {
+            display: none; /* Hidden on desktop */
         }
 
         /* Section Title */
@@ -623,22 +693,196 @@
             color: var(--parchment-light);
         }
 
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 80px 20px;
-            color: var(--ink-medium);
+        /* Hero Section */
+        .hero-section {
+            max-width: 1200px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
         }
 
-        .empty-state-icon {
-            font-size: 4rem;
+        .hero-row {
+            display: grid;
+            grid-template-columns: 420px 1fr; /* Sweet spot between 400 and 450 */
+            gap: 40px;
+            margin-bottom: 40px;
+            align-items: start;
+        }
+
+        /* Image Carousel */
+        .carousel-container {
+            position: relative;
+        }
+
+        .carousel-card {
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(43,24,16,0.05) 100%),
+                url('textures/parchment.jpg'),
+                var(--parchment-light);
+            background-size: cover;
+            border: 4px solid var(--border-ornate);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+      .carousel-image {
+    width: 100%;
+    height: 540px;
+    display: block;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px var(--shadow);
+    aspect-ratio: 3/4;
+    object-fit: contain; /* Changed from 'cover' to 'contain' - shows full image */
+    image-rendering: -webkit-optimize-contrast; /* Sharper rendering */
+    image-rendering: crisp-edges;
+    backface-visibility: hidden; /* Prevents blurriness during transitions */
+    transform: translateZ(0); /* Forces GPU acceleration */
+}
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--parchment-light);
+            border: 2px solid var(--gold-accent);
+            color: var(--ink-dark);
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .carousel-prev {
+            left: 10px;
+        }
+
+        .carousel-next {
+            right: 10px;
+        }
+
+        .carousel-btn:hover {
+            background: var(--gold-accent);
+            color: var(--parchment-light);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .carousel-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--parchment-light);
+            border: 2px solid var(--gold-accent);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            color: var(--ink-dark);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        /* About Me Card */
+        .about-me-card {
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(43,24,16,0.05) 100%),
+                url('textures/parchment.jpg'),
+                var(--parchment-light);
+            background-size: cover;
+            border: 4px solid var(--border-ornate);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+
+        .about-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--ink-dark);
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .about-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: var(--gold-accent);
+        }
+
+        .about-text {
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--ink-medium);
             margin-bottom: 20px;
         }
 
-        .empty-state-text {
-            font-family: var(--font-heading);
-            font-size: 1.5rem;
-            font-style: italic;
+        .about-text:last-child {
+            margin-bottom: 0;
+        }
+
+        /* About the Blog Card */
+        .about-blog-card {
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 50%, rgba(43,24,16,0.05) 100%),
+                url('textures/parchment.jpg'),
+                var(--parchment-light);
+            background-size: cover;
+            border: 4px solid var(--border-ornate);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px var(--shadow);
+            margin-bottom: 40px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero-row {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .carousel-card {
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            .about-me-card,
+            .about-blog-card {
+                padding: 30px 25px;
+            }
+
+            .about-title {
+                font-size: 1.6rem;
+            }
+
+            .about-text {
+                font-size: 1rem;
+            }
+
+            .carousel-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.5rem;
+            }
         }
 
         /* Footer */
@@ -753,39 +997,83 @@
     </style>
 </head>
 <body>
-    <!-- Admin Status Indicator -->
-    <div id="adminIndicator" class="admin-indicator">
-        <span class="indicator-dot"></span>
-        <span class="indicator-text">Admin Mode</span>
-    </div>
-
     <div class="container">
         <!-- Header -->
         <header>
             <nav class="main-nav">
                 <a href="index.html" class="nav-link">Home</a>
                 <span class="nav-separator">·</span>
-                <a href="discourse.html" class="nav-link">Discourse</a>
+                <div class="nav-dropdown-wrapper">
+                    <a href="discourse.html" class="nav-link discourse-link">Discourse</a>
+                    <div class="nav-dropdown">
+                        <a href="tech.html" class="dropdown-item">Tech</a>
+                        <a href="history.html" class="dropdown-item">History</a>
+                        <a href="literature.html" class="dropdown-item">Literature</a>
+                    </div>
+                </div>
             </nav>
         </header>
 
-        <!-- Pinned Posts Section -->
-        <section id="pinnedSection" class="pinned-section" style="display: none !important;">
-            <h2 class="section-title">Featured Chronicles</h2>
-            <div id="pinnedContainer" class="pinned-grid">
-                <!-- Pinned posts render here -->
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <!-- Carousel and About Me Row -->
+            <div class="hero-row">
+                <!-- Image Carousel -->
+                <div class="carousel-container">
+                    <div class="carousel-card">
+                        <button class="carousel-btn carousel-prev" onclick="prevImage()">←</button>
+                        <img id="carouselImage" src="images/home/photo-1.jpg" alt="Dane's photo" class="carousel-image">
+                        <button class="carousel-btn carousel-next" onclick="nextImage()">→</button>
+                        <div class="carousel-indicator">
+                            <span id="currentSlide">1</span> / 10
+                        </div>
+                    </div>
+                </div>
+
+                <!-- About Me Blurb -->
+                <div class="about-me-card">
+                    <h2 class="about-title">About Me</h2>
+                    <p class="about-text">
+                     Welcome, I'm Dane! I'm driven by the ever-evolving technology sector and the endless opportunities it creates. 
+                     As an ambitious learner and achiever, I've discovered the importance of balance...staying hungry without taking myself and life too seriously. 
+                     My experience spans automation, data structures and algorithms, and deep learning, but I'm always exploring what's next.
+
+                        
+                    </p>
+                    <p class="about-text">
+                       Beyond the screen, you'll find me reading, working out, playing chess, watching the Bengals shatter my hopes and dreams, or binge-watching One Piece. 
+                       I push myself to learn something new and grow 1% stronger every day. 
+                       Comfort hasn't always sat well with me. I always feel the pull to do more, to push further. 
+                       It's both a blessing and a curse, but it's taught me to embrace discomfort as growth. 
+                       I don't know exactly where I'll be in 10 years, but I'm determined it will be somewhere meaningful, doing work I'm genuinely passionate about.
+
+                    </p>
+                </div>
+            </div>
+
+            <!-- About the Blog Section -->
+            <div class="about-blog-card">
+                <h2 class="about-title">About My Blog</h2>
+                <p class="about-text">
+                      This blog serves multiple purposes, but it started with a simple need: a secure place to preserve my learnings without losing them to scattered notebooks. 
+                     
+
+                </p>
+                <p class="about-text">
+                    This blog has three main pillars. 
+                    <strong>Tech</strong> chronicles my projects—the trials, breakthroughs, and lessons learned that resumes can't capture. 
+                    I wanted space to detail not just what I built, but why and how, preserving the full journey. 
+                    <strong>History</strong> houses the fascinating accounts, figures, and events I encounter as I explore our vast world. Our brains can only hold so much; this is where I ensure nothing valuable slips away. 
+                    Finally, <strong>Literature</strong>—a category that would've shocked my younger self. Growing up, I despised reading and thought I was above books. Fast forward to 2025: I've read 23 novels and have countless thoughts to share. 
+                    This section captures my reviews and reflections on the stories that changed my perspective. 
+
+                </p>
             </div>
         </section>
 
-        <!-- Empty State -->
-        <div id="emptyState" class="empty-state" style="display: none;">
-            <div class="empty-state-icon">📜</div>
-            <p class="empty-state-text">The journal awaits its first tale...</p>
-        </div>
-
         <!-- Footer -->
         <footer>
-            <p>© 2025 The Quest Journal. All rights reserved.</p>
+            <p>© 2026 Dane's Blog. All rights reserved.</p>
             <p class="admin-link" onclick="app.showAdminLogin()">⚔</p>
         </footer>
     </div>
@@ -795,6 +1083,7 @@
         <h3 class="admin-title">🖋️ Scribe's Desk</h3>
         <button class="admin-btn" onclick="app.createNewTale()">Pen a New Tale</button>
         <button class="admin-btn" onclick="app.viewDrafts()">View Drafts</button>
+        <button class="admin-btn" onclick="app.recoverPosts()" style="background: #d97706; border-color: #b45309;">🚨 RECOVER POSTS</button>
         <button class="admin-btn danger" onclick="app.logout()">Logout</button>
     </div>
 
@@ -956,7 +1245,6 @@
                 this.githubToken = null;
                 sessionStorage.removeItem('questJournalAdmin');
                 document.getElementById('adminPanel').classList.remove('active');
-                document.getElementById('adminIndicator').classList.remove('active');
                 this.showMessage('Logged out - refresh to hide panel', 'success');
                 this.renderTales();
 
@@ -968,7 +1256,6 @@
 
             showAdminPanel() {
                 document.getElementById('adminPanel').classList.add('active');
-                document.getElementById('adminIndicator').classList.add('active');
                 console.log('✅ Admin panel shown');
             }
 
@@ -985,9 +1272,13 @@
                         return;
                     }
 
-                    const data = await response.json();
-                    const content = atob(data.content);
-                    this.posts = JSON.parse(content);
+                 const data = await response.json();
+// Proper Base64 to UTF-8 conversion - clean whitespace first!
+const cleanBase64 = data.content.replace(/\s/g, '');
+const binaryString = atob(cleanBase64);
+const utf8Bytes = Uint8Array.from(binaryString, char => char.charCodeAt(0));
+const content = new TextDecoder().decode(utf8Bytes);
+this.posts = JSON.parse(content);
                     console.log(`Loaded ${this.posts.length} tales from GitHub`);
                     
                     localStorage.setItem('questJournalPosts', JSON.stringify(this.posts));
@@ -1041,8 +1332,13 @@
                     }
 
                     // Prepare content
-                    const content = btoa(JSON.stringify(this.posts, null, 2));
-                    const payload = {
+
+// Proper UTF-8 to Base64 conversion
+const jsonString = JSON.stringify(this.posts, null, 2);
+const utf8Bytes = new TextEncoder().encode(jsonString);
+const binaryString = Array.from(utf8Bytes, byte => String.fromCharCode(byte)).join('');
+const content = btoa(binaryString);
+const payload = {
                         message: `Update blog posts - ${new Date().toISOString()}`,
                         content: content,
                         branch: this.githubBranch
@@ -1086,6 +1382,69 @@
                     // Fallback to localStorage
                     localStorage.setItem('questJournalPosts', JSON.stringify(this.posts));
                     this.showMessage(`⚠️ GitHub sync failed: ${error.message}. Saved locally.`, 'error');
+                }
+            }
+
+            // === RECOVERY FUNCTIONS ===
+
+            async recoverFromGitHub(commitSha) {
+                try {
+                    // Fetch specific commit version
+                    const url = `https://api.github.com/repos/${this.githubRepo}/contents/${this.postsFile}?ref=${commitSha}`;
+                    const response = await fetch(url, {
+                        headers: {
+                            'Authorization': `token ${this.githubToken}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+
+                    if (!response.ok) throw new Error('Failed to fetch old version');
+
+                    const data = await response.json();
+
+                    // Decode with proper UTF-8
+                    const cleanBase64 = data.content.replace(/\s/g, '');
+                    const binaryString = atob(cleanBase64);
+                    const utf8Bytes = Uint8Array.from(binaryString, char => char.charCodeAt(0));
+                    const content = new TextDecoder().decode(utf8Bytes);
+                    const recoveredPosts = JSON.parse(content);
+
+                    console.log(`✅ Recovered ${recoveredPosts.length} posts!`);
+                    console.log('Posts:', recoveredPosts.map(p => p.title));
+
+                    // Save recovered posts
+                    this.posts = recoveredPosts;
+                    await this.savePostsToGitHub();
+                    this.renderTales();
+
+                    this.showMessage(`✅ Recovered ${recoveredPosts.length} posts!`, 'success');
+                } catch (error) {
+                    console.error('Recovery failed:', error);
+                    this.showMessage(`Recovery failed: ${error.message}`, 'error');
+                }
+            }
+
+            recoverFromLocalStorage() {
+                const backup = localStorage.getItem('questJournalPosts');
+                if (backup) {
+                    this.posts = JSON.parse(backup);
+                    this.savePostsToGitHub();
+                    this.renderTales();
+                    this.showMessage(`Recovered ${this.posts.length} posts from local backup!`, 'success');
+                } else {
+                    this.showMessage('No local backup found', 'error');
+                }
+            }
+
+            recoverPosts() {
+                const choice = confirm('Try localStorage recovery first? (OK = Yes, Cancel = Use GitHub commit)');
+                if (choice) {
+                    this.recoverFromLocalStorage();
+                } else {
+                    const sha = prompt('Enter the commit SHA from GitHub (check commits before the pin fix):');
+                    if (sha) {
+                        this.recoverFromGitHub(sha);
+                    }
                 }
             }
 
@@ -1299,115 +1658,6 @@
                 document.getElementById('viewModal').classList.add('active');
             }
 
-            // === RENDERING ===
-
-            renderTales() {
-                // Skip pinned posts rendering on home page
-                // Render recent posts with pagination
-                this.renderRecentPosts();
-            }
-
-            renderPinnedPosts() {
-                // Pinned section disabled on home page - pinning is for category pages only
-                const pinnedSection = document.getElementById('pinnedSection');
-                if (pinnedSection) {
-                    pinnedSection.style.display = 'none';
-                }
-                return;
-
-                /* OLD CODE - KEEP FOR REFERENCE BUT NEVER RUNS
-                const pinnedPosts = this.posts.filter(p => p.pinnedSlots?.discourse !== null);
-                const pinnedContainer = document.getElementById('pinnedContainer');
-                const pinnedSection = document.getElementById('pinnedSection');
-
-                if (pinnedPosts.length === 0) {
-                    pinnedSection.style.display = 'none';
-                    return;
-                }
-
-                pinnedSection.style.display = 'block';
-                pinnedContainer.innerHTML = pinnedPosts.map(post => {
-                    const preview = post.content.substring(0, 150) + (post.content.length > 150 ? '...' : '');
-                    return `
-                        <div class="pinned-card tale-card">
-                            <h3 class="pinned-title tale-title">${this.escapeHtml(post.title)}</h3>
-                            <div class="tale-meta">
-                                <span>${this.formatDate(post.created)}</span>
-                            </div>
-                            <div class="tale-content">${this.escapeHtml(preview)}</div>
-                            <button class="read-tale-btn" onclick="app.viewTale(${post.id})">
-                                Read the Tale
-                            </button>
-                        </div>
-                    `;
-                }).join('');
-                */
-            }
-
-            renderRecentPosts() {
-                const container = document.getElementById('talesContainer');
-                const emptyState = document.getElementById('emptyState');
-                const loadMoreContainer = document.getElementById('loadMoreContainer');
-
-                // Show ALL posts on home page (pinning doesn't affect home page)
-                const allPosts = this.posts;
-
-                if (allPosts.length === 0) {
-                    container.style.display = 'none';
-                    emptyState.style.display = 'block';
-                    loadMoreContainer.style.display = 'none';
-                    return;
-                }
-
-                container.style.display = 'grid';
-                emptyState.style.display = 'none';
-
-                // Paginate posts
-                const displayPosts = allPosts.slice(0, this.currentPage * this.postsPerPage);
-
-                container.innerHTML = displayPosts.map(post => {
-                    const preview = post.content.substring(0, 200) + (post.content.length > 200 ? '...' : '');
-                    return `
-                        <div class="tale-card">
-                            <h3 class="tale-title">${this.escapeHtml(post.title)}</h3>
-                            <div class="tale-meta">
-                                <span>${this.formatDate(post.created)}</span>
-                            </div>
-                            <div class="tale-content">${this.escapeHtml(preview)}</div>
-                            <button class="read-tale-btn" onclick="app.viewTale(${post.id})">
-                                Read the Tale
-                            </button>
-                        </div>
-                    `;
-                }).join('');
-
-                // Show/hide load more button
-                if (displayPosts.length < allPosts.length) {
-                    loadMoreContainer.style.display = 'block';
-                } else {
-                    loadMoreContainer.style.display = 'none';
-                }
-            }
-
-            loadMorePosts() {
-                this.currentPage++;
-                this.renderRecentPosts();
-                document.getElementById('recentSection').scrollIntoView({ behavior: 'smooth' });
-            }
-
-            showAllTales() {
-                this.renderTales();
-            }
-
-            showHome() {
-                this.renderTales();
-            }
-
-            showDiscourse() {
-                // Placeholder for future discourse/blog categories
-                this.showMessage('Discourse section coming soon!', 'success');
-            }
-
             // === UTILITIES ===
 
             closeModal(modalId) {
@@ -1463,11 +1713,119 @@
                 }
 
                 // Show UI elements
-                document.getElementById('adminIndicator').classList.add('active');
                 document.getElementById('adminPanel').classList.add('active');
-                console.log('✅ Admin mode and Scribe\'s Desk shown on page load');
+                console.log('✅ Scribe\'s Desk shown on page load');
             }
         })();
+
+        // Handle edit hash from category pages (e.g., #edit-123)
+        (function() {
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#edit-')) {
+                const postId = parseInt(hash.replace('#edit-', ''));
+                if (postId && !isNaN(postId)) {
+                    // Wait for posts to load, then open edit modal
+                    setTimeout(() => {
+                        const post = app.posts.find(p => p.id === postId);
+                        if (post && app.isAdmin) {
+                            app.currentViewingPost = post;
+                            app.editTale();
+                            // Clear hash
+                            history.replaceState(null, null, ' ');
+                        }
+                    }, 1000);
+                }
+            }
+        })();
+
+        // Mobile dropdown toggle
+        (function() {
+            const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+            if (isMobile) {
+                const dropdownWrapper = document.querySelector('.nav-dropdown-wrapper');
+                const discourseLink = document.querySelector('.discourse-link');
+
+                if (dropdownWrapper) {
+                    // Add mobile-specific "Discourse Home" option
+                    const dropdown = dropdownWrapper.querySelector('.nav-dropdown');
+                    const homeOption = document.createElement('a');
+                    homeOption.href = 'discourse.html';
+                    homeOption.className = 'dropdown-item dropdown-mobile-home';
+                    homeOption.textContent = 'Discourse Home';
+                    dropdown.insertBefore(homeOption, dropdown.firstChild);
+
+                    const homeDivider = document.createElement('span');
+                    homeDivider.className = 'dropdown-divider dropdown-mobile-home';
+                    homeDivider.textContent = '✦';
+                    dropdown.insertBefore(homeDivider, dropdown.children[1]);
+
+                    // Toggle dropdown on click
+                    discourseLink.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        dropdownWrapper.classList.toggle('mobile-open');
+                    });
+
+                    // Close dropdown when clicking outside
+                    document.addEventListener('click', function(e) {
+                        if (!dropdownWrapper.contains(e.target)) {
+                            dropdownWrapper.classList.remove('mobile-open');
+                        }
+                    });
+                }
+            }
+        })();
+
+        // Image Carousel
+        let currentImageIndex = 1;
+        const totalImages = 10;
+
+        function updateCarousel() {
+            const image = document.getElementById('carouselImage');
+            const indicator = document.getElementById('currentSlide');
+
+            image.src = `images/home/photo-${currentImageIndex}.jpg`;
+            indicator.textContent = currentImageIndex;
+
+            // Add fade animation
+            image.style.opacity = '0';
+            setTimeout(() => {
+                image.style.opacity = '1';
+            }, 50);
+        }
+
+        function nextImage() {
+            currentImageIndex++;
+            if (currentImageIndex > totalImages) {
+                currentImageIndex = 1;
+            }
+            updateCarousel();
+        }
+
+        function prevImage() {
+            currentImageIndex--;
+            if (currentImageIndex < 1) {
+                currentImageIndex = totalImages;
+            }
+            updateCarousel();
+        }
+
+        // Add smooth fade transition to image
+        document.addEventListener('DOMContentLoaded', function() {
+            const image = document.getElementById('carouselImage');
+            if (image) {
+                image.style.transition = 'opacity 0.3s ease';
+            }
+        });
+
+        // Optional: Add keyboard navigation (left/right arrows)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                prevImage();
+            } else if (e.key === 'ArrowRight') {
+                nextImage();
+            }
+        });
     </script>
 </body>
 </html>
