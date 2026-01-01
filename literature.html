@@ -836,6 +836,16 @@
 
         let currentViewingPost = null;
 
+        // Create URL-friendly slug from post title
+        function createSlug(title) {
+            return title
+                .toLowerCase()
+                .replace(/[^\w\s-]/g, '') // Remove special characters
+                .replace(/\s+/g, '-')      // Replace spaces with hyphens
+                .replace(/-+/g, '-')       // Replace multiple hyphens with single
+                .trim();
+        }
+
         function viewTale(postId) {
             const post = allPosts.find(p => p.id === postId);
             if (!post) return;
@@ -858,10 +868,17 @@
             }
 
             document.getElementById('viewModal').classList.add('active');
+
+            // Update URL with post slug for sharing
+            const slug = createSlug(post.title);
+            history.pushState(null, '', `#${slug}`);
         }
 
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('active');
+
+            // Clear the URL hash when closing the modal
+            history.pushState(null, '', window.location.pathname);
         }
 
         function editCurrentPost() {
@@ -946,6 +963,16 @@
             await loadPostsFromGitHub();
             renderPinnedPosts();
             renderPosts();
+
+            // Check if URL has a hash and open the corresponding post
+            const hash = window.location.hash.slice(1); // Remove the # symbol
+            if (hash) {
+                // Find post by matching slug
+                const post = allPosts.find(p => createSlug(p.title) === hash);
+                if (post) {
+                    viewTale(post.id);
+                }
+            }
         })();
 
         // Pin management variables
