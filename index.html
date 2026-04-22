@@ -1180,14 +1180,14 @@
                 this.githubBranch = 'main';
                 this.postsFile = 'data/posts.json';
 
-                this.init();
+                this.checkExistingSession();
+                this.initPromise = this.init();
             }
 
             async init() {
                 await this.loadPostsFromGitHub();
                 this.loadDraftsFromLocal();
                 this.renderTales();
-                this.checkExistingSession();
             }
 
             // === AUTHENTICATION ===
@@ -1702,16 +1702,14 @@ const payload = {
             if (hash && hash.startsWith('#edit-')) {
                 const postId = parseInt(hash.replace('#edit-', ''));
                 if (postId && !isNaN(postId)) {
-                    // Wait for posts to load, then open edit modal
-                    setTimeout(() => {
+                    app.initPromise.then(() => {
                         const post = app.posts.find(p => p.id === postId);
                         if (post && app.isAdmin) {
                             app.currentViewingPost = post;
                             app.editTale();
-                            // Clear hash
                             history.replaceState(null, null, ' ');
                         }
-                    }, 1000);
+                    });
                 }
             }
         })();
