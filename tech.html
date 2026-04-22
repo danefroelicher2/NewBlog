@@ -702,6 +702,7 @@
     </div>
 
     <script>
+        const BLOG_PAT = '%%BLOG_PAT%%';
         let allPosts = [];
         let currentPage = 1;
         const postsPerPage = 6; // 2x3 grid (2 rows of 3 columns)
@@ -926,8 +927,7 @@
                     return;
                 }
 
-                const sessionData = JSON.parse(session);
-                const token = sessionData.token;
+                const token = BLOG_PAT;
 
                 // Proper UTF-8 to Base64 conversion
                 const deleteJsonString = JSON.stringify(posts, null, 2);
@@ -1074,8 +1074,7 @@
                     return;
                 }
 
-                const sessionData = JSON.parse(session);
-                const token = sessionData.token;
+                const token = BLOG_PAT;
 
                 const saveResponse = await fetch(url, {
                     method: 'PUT',

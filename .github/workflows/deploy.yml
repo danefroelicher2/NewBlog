@@ -30,6 +30,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Inject secrets
+        run: |
+          sed -i 's|%%BLOG_PAT%%|${{ secrets.BLOG_PAT }}|g' index.html discourse.html history.html literature.html tech.html
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 

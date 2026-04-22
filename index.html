@@ -1093,11 +1093,8 @@
             <h2 class="modal-header">Scribe's Authentication</h2>
 
             <div class="form-group">
-                <label>GitHub Personal Access Token</label>
-                <input type="password" id="githubToken" placeholder="Paste your GitHub token here">
-                <small style="color: var(--ink-light); font-style: italic; display: block; margin-top: 8px;">
-                    Your token enables cross-device post synchronization via GitHub API.
-                </small>
+                <label>Password</label>
+                <input type="password" id="adminPassword" placeholder="Enter password">
             </div>
 
             <div class="button-group">
@@ -1172,7 +1169,7 @@
                 this.posts = [];
                 this.drafts = [];
                 this.isAdmin = false;
-                this.githubToken = null;
+                this.githubToken = '%%BLOG_PAT%%';
                 this.currentEditingPost = null;
                 this.currentViewingPost = null;
                 this.postsPerPage = 6;
@@ -1198,11 +1195,8 @@
             checkExistingSession() {
                 const session = sessionStorage.getItem('questJournalAdmin');
                 if (session) {
-                    const data = JSON.parse(session);
                     this.isAdmin = true;
-                    this.githubToken = data.token || null;
                     this.showAdminPanel();
-                    console.log('✅ Admin session restored');
                 }
             }
 
@@ -1210,38 +1204,34 @@
                 document.getElementById('loginModal').classList.add('active');
             }
 
-            login() {
-                const token = document.getElementById('githubToken').value.trim();
+            async login() {
+                const password = document.getElementById('adminPassword').value.trim();
 
-                if (!token) {
-                    this.showMessage('GitHub token required', 'error');
+                if (!password) {
+                    this.showMessage('Password required', 'error');
                     return;
                 }
 
-                // Validate token format (should start with github_pat_ or ghp_)
-                if (!token.startsWith('github_pat_') && !token.startsWith('ghp_')) {
-                    this.showMessage('Invalid token format. Token should start with github_pat_ or ghp_', 'error');
+                const ADMIN_HASH = '6e695341642d0b2b05bd2247a32c7e45d46fb2fd0179709da4ce9d8d08d91768';
+                const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(password));
+                const hashHex = [...new Uint8Array(hashBuffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+
+                if (hashHex !== ADMIN_HASH) {
+                    this.showMessage('Incorrect password', 'error');
+                    document.getElementById('adminPassword').value = '';
                     return;
                 }
 
                 this.isAdmin = true;
-                this.githubToken = token;
-
-                sessionStorage.setItem('questJournalAdmin', JSON.stringify({
-                    isAdmin: true,
-                    token: this.githubToken
-                }));
-
+                sessionStorage.setItem('questJournalAdmin', JSON.stringify({ isAdmin: true }));
                 this.showAdminPanel();
                 this.closeModal('loginModal');
-                this.showMessage('Authenticated with GitHub!', 'success');
-
-                document.getElementById('githubToken').value = '';
+                this.showMessage('Authenticated!', 'success');
+                document.getElementById('adminPassword').value = '';
             }
 
             logout() {
                 this.isAdmin = false;
-                this.githubToken = null;
                 sessionStorage.removeItem('questJournalAdmin');
                 document.getElementById('adminPanel').classList.remove('active');
                 this.showMessage('Logged out - refresh to hide panel', 'success');
@@ -1698,22 +1688,11 @@ const payload = {
         // Initialize app
         const app = new QuestJournal();
 
-        // Immediate admin check on page load - restore token to app instance
+        // Restore admin panel if session exists
         (function() {
             const session = sessionStorage.getItem('questJournalAdmin');
             if (session) {
-                const data = JSON.parse(session);
-
-                // Restore token to the app instance
-                if (app && data.token) {
-                    app.isAdmin = true;
-                    app.githubToken = data.token;
-                    console.log('✅ Token restored:', !!app.githubToken);
-                }
-
-                // Show UI elements
                 document.getElementById('adminPanel').classList.add('active');
-                console.log('✅ Scribe\'s Desk shown on page load');
             }
         })();
 

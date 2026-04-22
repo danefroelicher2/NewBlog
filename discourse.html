@@ -140,9 +140,12 @@
             content: '';
             position: absolute;
             top: 0;
-            left: -20px; /* Extend hover area to the left */
-            right: -20px; /* Extend hover area to the right */
-            bottom: -10px; /* Extend hover area down to cover gap */
+            left: -20px;
+            /* Extend hover area to the left */
+            right: -20px;
+            /* Extend hover area to the right */
+            bottom: -10px;
+            /* Extend hover area down to cover gap */
             z-index: -1;
         }
 
@@ -161,7 +164,8 @@
             border: 3px solid var(--border-ornate);
             border-radius: 8px;
             box-shadow: 0 8px 25px var(--shadow);
-            padding: 8px 0; /* REDUCED from 15px to 8px */
+            padding: 8px 0;
+            /* REDUCED from 15px to 8px */
             min-width: 180px;
             z-index: 1000;
         }
@@ -183,10 +187,12 @@
         .nav-dropdown::after {
             content: '';
             position: absolute;
-            bottom: 100%; /* Start from top of dropdown */
+            bottom: 100%;
+            /* Start from top of dropdown */
             left: 0;
             right: 0;
-            height: 10px; /* Same as margin-top to fill the gap */
+            height: 10px;
+            /* Same as margin-top to fill the gap */
             background: transparent;
             z-index: -1;
         }
@@ -200,7 +206,8 @@
             font-size: 1.1rem;
             color: var(--ink-dark);
             text-decoration: none;
-            padding: 10px 30px; /* REDUCED from 12px to 10px vertical padding */
+            padding: 10px 30px;
+            /* REDUCED from 12px to 10px vertical padding */
             display: block;
             transition: all 0.3s ease;
             letter-spacing: 1px;
@@ -231,7 +238,8 @@
         /* Mobile Dropdown Behavior */
         @media (max-width: 768px) {
             .nav-dropdown-wrapper:hover .nav-dropdown {
-                display: none; /* Disable hover on mobile */
+                display: none;
+                /* Disable hover on mobile */
             }
 
             .nav-dropdown-wrapper.mobile-open .nav-dropdown {
@@ -239,7 +247,8 @@
             }
 
             .discourse-link {
-                pointer-events: none; /* Prevent navigation on mobile */
+                pointer-events: none;
+                /* Prevent navigation on mobile */
             }
 
             /* Add "Discourse Home" option for mobile */
@@ -253,7 +262,8 @@
         }
 
         .dropdown-mobile-home {
-            display: none; /* Hidden on desktop */
+            display: none;
+            /* Hidden on desktop */
         }
 
         .section-title {
@@ -593,7 +603,8 @@
 
         .pinned-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
+            grid-template-columns: repeat(3, 1fr);
+            /* 3 equal columns */
             gap: 30px;
             margin-bottom: 40px;
         }
@@ -611,7 +622,8 @@
             box-shadow: 0 10px 25px var(--shadow);
             position: relative;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            width: 100%; /* Card fills its grid cell */
+            width: 100%;
+            /* Card fills its grid cell */
         }
 
         .pinned-card:hover {
@@ -622,13 +634,15 @@
         /* Mobile responsiveness */
         @media (max-width: 1024px) {
             .pinned-grid {
-                grid-template-columns: repeat(2, 1fr); /* 2 columns on tablets */
+                grid-template-columns: repeat(2, 1fr);
+                /* 2 columns on tablets */
             }
         }
 
         @media (max-width: 768px) {
             .pinned-grid {
-                grid-template-columns: 1fr; /* Single column on mobile */
+                grid-template-columns: 1fr;
+                /* Single column on mobile */
             }
         }
 
@@ -734,6 +748,7 @@
     </div>
 
     <script>
+        const BLOG_PAT = '%%BLOG_PAT%%';
         let allPosts = [];
         let currentPage = 1;
         const postsPerPage = 6; // 2x3 grid (2 rows of 3 columns)
@@ -964,8 +979,7 @@
                     return;
                 }
 
-                const sessionData = JSON.parse(session);
-                const token = sessionData.token;
+                const token = BLOG_PAT;
 
                 // Proper UTF-8 to Base64 conversion
                 const deleteJsonString = JSON.stringify(posts, null, 2);
@@ -1089,8 +1103,7 @@
                     return;
                 }
 
-                const sessionData = JSON.parse(session);
-                const token = sessionData.token;
+                const token = BLOG_PAT;
 
                 const saveResponse = await fetch(url, {
                     method: 'PUT',
@@ -1137,7 +1150,7 @@
         })();
 
         // Mobile dropdown toggle
-        (function() {
+        (function () {
             const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
             if (isMobile) {
@@ -1154,13 +1167,13 @@
                     dropdown.insertBefore(homeOption, dropdown.firstChild);
 
                     // Toggle dropdown on click
-                    discourseLink.addEventListener('click', function(e) {
+                    discourseLink.addEventListener('click', function (e) {
                         e.preventDefault();
                         dropdownWrapper.classList.toggle('mobile-open');
                     });
 
                     // Close dropdown when clicking outside
-                    document.addEventListener('click', function(e) {
+                    document.addEventListener('click', function (e) {
                         if (!dropdownWrapper.contains(e.target)) {
                             dropdownWrapper.classList.remove('mobile-open');
                         }
