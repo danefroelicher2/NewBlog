@@ -1187,7 +1187,6 @@
             async init() {
                 await this.loadPostsFromGitHub();
                 this.loadDraftsFromLocal();
-                this.renderTales();
             }
 
             // === AUTHENTICATION ===
@@ -1235,7 +1234,6 @@
                 sessionStorage.removeItem('questJournalAdmin');
                 document.getElementById('adminPanel').classList.remove('active');
                 this.showMessage('Logged out - refresh to hide panel', 'success');
-                this.renderTales();
 
                 // Reload page to completely clear admin state
                 setTimeout(() => {
@@ -1404,7 +1402,6 @@ const payload = {
                     // Save recovered posts
                     this.posts = recoveredPosts;
                     await this.savePostsToGitHub();
-                    this.renderTales();
 
                     this.showMessage(`✅ Recovered ${recoveredPosts.length} posts!`, 'success');
                 } catch (error) {
@@ -1418,7 +1415,6 @@ const payload = {
                 if (backup) {
                     this.posts = JSON.parse(backup);
                     this.savePostsToGitHub();
-                    this.renderTales();
                     this.showMessage(`Recovered ${this.posts.length} posts from local backup!`, 'success');
                 } else {
                     this.showMessage('No local backup found', 'error');
@@ -1582,7 +1578,6 @@ const payload = {
                 }
 
                 await this.savePostsToGitHub();
-                this.renderTales();
                 this.closeEditorModal();
             }
 
@@ -1605,7 +1600,6 @@ const payload = {
 
                 this.posts = this.posts.filter(p => p.id !== this.currentViewingPost.id);
                 await this.savePostsToGitHub();
-                this.renderTales();
                 this.closeModal('viewModal');
                 this.showMessage('Tale deleted', 'success');
             }
