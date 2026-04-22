@@ -31,8 +31,17 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Inject secrets
+        env:
+          PAT: ${{ secrets.BLOG_PAT }}
         run: |
-          sed -i 's|%%BLOG_PAT%%|${{ secrets.BLOG_PAT }}|g' index.html discourse.html history.html literature.html tech.html
+          python3 -c "
+import os
+pat = os.environ['PAT']
+for f in ['index.html','discourse.html','history.html','literature.html','tech.html']:
+    c = open(f).read()
+    open(f,'w').write(c.replace('%%BLOG_PAT%%', pat))
+print('Injection complete')
+"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
