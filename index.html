@@ -1083,6 +1083,7 @@
         <h3 class="admin-title">🖋️ Scribe's Desk</h3>
         <button class="admin-btn" onclick="app.createNewTale()">Pen a New Tale</button>
         <button class="admin-btn" onclick="app.viewDrafts()">View Drafts</button>
+        <button class="admin-btn" onclick="app.promptTokenUpdate()" title="Update GitHub token">⚙</button>
         <button class="admin-btn danger" onclick="app.logout()">Logout</button>
     </div>
 
@@ -1163,13 +1164,32 @@
         </div>
     </div>
 
+    <!-- Token Update Modal -->
+    <div id="tokenModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="app.closeModal('tokenModal')">&times;</button>
+            <h2 class="modal-header">Update GitHub Token</h2>
+            <p style="color: var(--ink-medium); font-style: italic; margin-bottom: 20px;">
+                Your GitHub token is invalid. Create a new one at GitHub (Settings → Developer settings → Personal access tokens → classic, with <strong>repo</strong> scope), then paste it below.
+            </p>
+            <div class="form-group">
+                <label>New GitHub Token</label>
+                <input type="password" id="newToken" placeholder="Paste token here (ghp_...)">
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="app.saveToken()">Save Token</button>
+                <button class="btn btn-secondary" onclick="app.closeModal('tokenModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         class QuestJournal {
             constructor() {
                 this.posts = [];
                 this.drafts = [];
                 this.isAdmin = false;
-                this.githubToken = '%%BLOG_PAT%%';
+                this.githubToken = localStorage.getItem('blogPAT') || '%%BLOG_PAT%%';
                 this.currentEditingPost = null;
                 this.currentViewingPost = null;
                 this.postsPerPage = 6;
@@ -1246,6 +1266,23 @@
                 console.log('✅ Admin panel shown');
             }
 
+            promptTokenUpdate() {
+                document.getElementById('tokenModal').classList.add('active');
+            }
+
+            saveToken() {
+                const token = document.getElementById('newToken').value.trim();
+                if (!token) {
+                    this.showMessage('Token required', 'error');
+                    return;
+                }
+                localStorage.setItem('blogPAT', token);
+                this.githubToken = token;
+                this.closeModal('tokenModal');
+                this.showMessage('Token saved!', 'success');
+                document.getElementById('newToken').value = '';
+            }
+
             // === GITHUB API ===
 
             async loadPostsFromGitHub() {
@@ -1311,6 +1348,9 @@ this.posts = JSON.parse(content);
                             const getData = await getResponse.json();
                             sha = getData.sha;
                             console.log('✅ Found existing file, SHA:', sha);
+                        } else if (getResponse.status === 401) {
+                            this.promptTokenUpdate();
+                            return;
                         } else {
                             console.log('ℹ️ File does not exist yet, will create new');
                         }
@@ -1352,6 +1392,9 @@ const payload = {
                     if (!response.ok) {
                         const errorData = await response.json();
                         console.error('❌ GitHub API error:', errorData);
+                        if (response.status === 401) {
+                            this.promptTokenUpdate();
+                        }
                         throw new Error(`GitHub API error: ${errorData.message || response.statusText}`);
                     }
 

@@ -694,7 +694,7 @@
     </div>
 
     <script>
-        const BLOG_PAT = '%%BLOG_PAT%%';
+        const BLOG_PAT = localStorage.getItem('blogPAT') || '%%BLOG_PAT%%';
         let allPosts = [];
         let currentPage = 1;
         const postsPerPage = 6; // 2x3 grid (2 rows of 3 columns)
