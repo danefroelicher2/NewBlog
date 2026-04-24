@@ -25,7 +25,7 @@ jobs:
       - name: Inject secrets
         env:
           PAT: ${{ secrets.BLOG_PAT }}
-        run: python3 -c "import os; pat=os.environ['PAT']; files=['index.html','discourse.html','history.html','literature.html','tech.html']; [open(f,'w').write(open(f).read().replace('%%BLOG_PAT%%',pat)) for f in files]; print('Injection complete')"
+        run: python3 -c "import os; pat=os.environ['PAT']; files=['index.html','discourse.html','history.html','literature.html','tech.html']; [open(f,'w').write(c) for f in files for c in [open(f).read().replace('%%BLOG_PAT%%',pat)]]; print('Injection complete')"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
